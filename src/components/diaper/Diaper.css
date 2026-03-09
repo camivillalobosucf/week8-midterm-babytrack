@@ -1,0 +1,15 @@
+.diaper-badge {
+  background: var(--color-diaper);
+  color: #713f12;
+}
+
+.diaper-entry {
+  border-left-color: var(--color-diaper);
+}
+
+.diaper-form .btn-toggle-active {
+  background: var(--color-diaper);
+  border-color: #fde047;
+  color: #713f12;
+  font-weight: 700;
+}

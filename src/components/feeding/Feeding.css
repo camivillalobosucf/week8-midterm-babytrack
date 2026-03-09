@@ -1,0 +1,16 @@
+.feeding-badge {
+  background: var(--color-feeding);
+  color: #166534;
+}
+
+.feeding-entry {
+  border-left-color: var(--color-feeding);
+}
+
+/* Active toggle uses feeding green */
+.feeding-form .btn-toggle-active {
+  background: var(--color-feeding);
+  border-color: #86efac;
+  color: #166534;
+  font-weight: 700;
+}

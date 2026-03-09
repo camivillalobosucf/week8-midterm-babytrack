@@ -1,12 +1,11 @@
 import { useState } from 'react'
-import { useDiapers } from '../hooks/useDiapers'
-import DiaperAnalytics from '../components/diaper/DiaperAnalytics'
-import DiaperEntry from '../components/diaper/DiaperEntry'
-import DiaperForm from '../components/diaper/DiaperForm'
+import { useDiary } from '../hooks/useDiary'
+import DiaryEntry from '../components/diary/DiaryEntry'
+import DiaryForm from '../components/diary/DiaryForm'
 import Modal from '../components/layout/Modal'
 
-function DiaperPage() {
-  const { entries, loading, error, add, update, remove } = useDiapers()
+function DiaryPage() {
+  const { entries, loading, error, add, update, remove } = useDiary()
   const [modalOpen,    setModalOpen]    = useState(false)
   const [editingEntry, setEditingEntry] = useState(null)
 
@@ -30,30 +29,28 @@ function DiaperPage() {
   }
 
   async function handleDelete(id) {
-    if (window.confirm('Delete this diaper entry?')) await remove(id)
+    if (window.confirm('Delete this diary entry?')) await remove(id)
   }
 
   return (
     <div className="tracker-page">
       <div className="tracker-page-header">
         <div>
-          <h1 className="page-title">Diapers</h1>
-          <p className="page-subtitle">Log wet and dirty diaper changes</p>
+          <h1 className="page-title">Diary</h1>
+          <p className="page-subtitle">Daily notes and observations about your baby</p>
         </div>
-        <button className="btn btn-primary" onClick={openAdd}>+ Add</button>
+        <button className="btn btn-primary" onClick={openAdd}>+ Add Entry</button>
       </div>
-
-      {!loading && <DiaperAnalytics entries={entries} />}
 
       {loading  && <p className="loading-text">Loading…</p>}
       {error    && <p className="error-text">{error}</p>}
       {!loading && entries.length === 0 && (
-        <p className="empty-text">No diapers logged yet. Tap + Add to get started.</p>
+        <p className="empty-text">No diary entries yet. Tap + Add Entry to get started.</p>
       )}
 
       <div className="entry-list">
         {entries.map((entry) => (
-          <DiaperEntry
+          <DiaryEntry
             key={entry.id}
             entry={entry}
             onEdit={openEdit}
@@ -65,9 +62,9 @@ function DiaperPage() {
       <Modal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={editingEntry ? 'Edit Diaper' : 'Log Diaper Change'}
+        title={editingEntry ? 'Edit Entry' : 'New Diary Entry'}
       >
-        <DiaperForm
+        <DiaryForm
           onSubmit={handleSubmit}
           onCancel={() => setModalOpen(false)}
           initialEntry={editingEntry}
@@ -77,4 +74,4 @@ function DiaperPage() {
   )
 }
 
-export default DiaperPage
+export default DiaryPage

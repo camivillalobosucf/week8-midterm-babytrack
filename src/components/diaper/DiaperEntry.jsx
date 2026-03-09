@@ -1,0 +1,30 @@
+import { formatTime, formatDate } from '../../utils/formatters'
+import './Diaper.css'
+
+const TYPE_LABEL = { wet: 'Wet', dirty: 'Dirty', both: 'Wet + Dirty' }
+
+function DiaperEntry({ entry, onEdit, onDelete }) {
+  return (
+    <div className="entry-card diaper-entry">
+      <div className="entry-main">
+        <span className="entry-type-badge diaper-badge">
+          {TYPE_LABEL[entry.type] ?? entry.type}
+        </span>
+        {entry.notes && <span className="entry-notes">— {entry.notes}</span>}
+      </div>
+      <div className="entry-footer">
+        <span className="entry-time">
+          {formatTime(entry.timestamp)} &middot; {formatDate(entry.timestamp)}
+        </span>
+        <div className="entry-actions">
+          <button className="btn-action" onClick={() => onEdit(entry)}>Edit</button>
+          <button className="btn-action btn-action-delete" onClick={() => onDelete(entry.id)}>
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default DiaperEntry

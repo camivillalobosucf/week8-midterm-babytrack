@@ -1,0 +1,22 @@
+.sleep-badge {
+  background: var(--color-sleep);
+  color: #1e40af;
+}
+
+.sleep-entry {
+  border-left-color: var(--color-sleep);
+}
+
+.sleep-form .btn-toggle-active {
+  background: var(--color-sleep);
+  border-color: #93c5fd;
+  color: #1e40af;
+  font-weight: 700;
+}
+
+.sleep-duration-preview {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  padding: 0.25rem 0;
+}

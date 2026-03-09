@@ -4,10 +4,11 @@ import { useAuth } from '../../context/AuthContext'
 import './Navbar.css'
 
 const NAV_LINKS = [
-  { to: '/dashboard', label: 'Dashboard',  dot: null           },
-  { to: '/feeding',   label: 'Feedings',   dot: 'dot-feeding'  },
-  { to: '/diaper',    label: 'Diapers',    dot: 'dot-diaper'   },
-  { to: '/sleep',     label: 'Sleep',      dot: 'dot-sleep'    },
+  { to: '/dashboard', label: 'Dashboard', dot: null          },
+  { to: '/feeding',   label: 'Feedings',  dot: 'dot-feeding' },
+  { to: '/diaper',    label: 'Diapers',   dot: 'dot-diaper'  },
+  { to: '/sleep',     label: 'Sleep',     dot: 'dot-sleep'   },
+  { to: '/diary',     label: 'Diary',     dot: 'dot-diary'   },
 ]
 
 function Navbar() {

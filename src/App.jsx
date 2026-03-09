@@ -8,6 +8,7 @@ import DashboardPage from './pages/DashboardPage'
 import FeedingPage from './pages/FeedingPage'
 import DiaperPage from './pages/DiaperPage'
 import SleepPage from './pages/SleepPage'
+import DiaryPage from './pages/DiaryPage'
 
 function ProtectedLayout() {
   return (
@@ -34,6 +35,7 @@ function App() {
             <Route path="/feeding"   element={<FeedingPage />} />
             <Route path="/diaper"    element={<DiaperPage />} />
             <Route path="/sleep"     element={<SleepPage />} />
+            <Route path="/diary"     element={<DiaryPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
