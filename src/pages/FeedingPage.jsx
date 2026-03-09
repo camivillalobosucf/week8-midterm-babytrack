@@ -37,7 +37,7 @@ function FeedingPage() {
     <div className="tracker-page">
       <div className="tracker-page-header">
         <div>
-          <h1 className="page-title">Feedings</h1>
+          <h1 className="page-title">🍼 Feedings</h1>
           <p className="page-subtitle">Track breast, bottle, and solid feeds</p>
         </div>
         <button className="btn btn-primary" onClick={openAdd}>+ Add</button>

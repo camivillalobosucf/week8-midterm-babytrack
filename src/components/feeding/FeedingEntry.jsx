@@ -1,7 +1,7 @@
 import { formatTime, formatDate, formatDuration } from '../../utils/formatters'
 import './Feeding.css'
 
-const TYPE_LABEL = { breast: 'Breast', bottle: 'Bottle', solid: 'Solid' }
+const TYPE_LABEL = { breast: '🤱 Breast', bottle: '🍼 Bottle', solid: '🥣 Solid' }
 
 function FeedingEntry({ entry, onEdit, onDelete }) {
   const detail = () => {

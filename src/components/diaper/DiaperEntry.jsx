@@ -1,7 +1,7 @@
 import { formatTime, formatDate } from '../../utils/formatters'
 import './Diaper.css'
 
-const TYPE_LABEL = { wet: 'Wet', dirty: 'Dirty', both: 'Wet + Dirty' }
+const TYPE_LABEL = { wet: '💧 Wet', dirty: '💩 Dirty', both: '💧💩 Both' }
 
 function DiaperEntry({ entry, onEdit, onDelete }) {
   return (

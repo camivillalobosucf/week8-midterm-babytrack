@@ -6,7 +6,8 @@
   --color-sleep:   #B6DDFD;
 
   --sidebar-width: 260px;
-  --mobile-header-height: 56px;
+  --mobile-header-height: 60px;
+  --bottom-nav-height: 62px;
 
   --bg-app:      #faf5f8;
   --bg-white:    #ffffff;
@@ -56,6 +57,7 @@ body {
     margin-left: 0;
     padding: 1.25rem 1rem;
     padding-top: calc(var(--mobile-header-height) + 1.25rem);
+    padding-bottom: calc(var(--bottom-nav-height) + 1rem);
   }
 }
 

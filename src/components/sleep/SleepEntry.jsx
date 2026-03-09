@@ -1,13 +1,13 @@
 import { formatTime, formatDate, formatDuration } from '../../utils/formatters'
 import './Sleep.css'
 
-const QUALITY_LABEL = { good: 'Good', fair: 'Fair', poor: 'Poor' }
+const QUALITY_LABEL = { good: '😊 Good', fair: '😐 Fair', poor: '😣 Poor' }
 
 function SleepEntry({ entry, onEdit, onDelete }) {
   return (
     <div className="entry-card sleep-entry">
       <div className="entry-main">
-        <span className="entry-type-badge sleep-badge">Sleep</span>
+        <span className="entry-type-badge sleep-badge">😴 Sleep</span>
         <span className="entry-detail">{formatDuration(entry.duration)}</span>
         {entry.quality && (
           <span className="entry-type-badge sleep-badge">

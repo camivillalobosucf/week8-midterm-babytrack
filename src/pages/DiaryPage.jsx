@@ -36,7 +36,7 @@ function DiaryPage() {
     <div className="tracker-page">
       <div className="tracker-page-header">
         <div>
-          <h1 className="page-title">Diary</h1>
+          <h1 className="page-title">📓 Diary</h1>
           <p className="page-subtitle">Daily notes and observations about your baby</p>
         </div>
         <button className="btn btn-primary" onClick={openAdd}>+ Add Entry</button>

@@ -1,18 +1,21 @@
 import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { useProfile } from '../../hooks/useProfile'
 import './Navbar.css'
 
 const NAV_LINKS = [
-  { to: '/dashboard', label: 'Dashboard', dot: null          },
-  { to: '/feeding',   label: 'Feedings',  dot: 'dot-feeding' },
-  { to: '/diaper',    label: 'Diapers',   dot: 'dot-diaper'  },
-  { to: '/sleep',     label: 'Sleep',     dot: 'dot-sleep'   },
-  { to: '/diary',     label: 'Diary',     dot: 'dot-diary'   },
+  { to: '/dashboard', label: 'Dashboard', emoji: '🏠' },
+  { to: '/feeding',   label: 'Feedings',  emoji: '🍼' },
+  { to: '/diaper',    label: 'Diapers',   emoji: '🧷' },
+  { to: '/sleep',     label: 'Sleep',     emoji: '😴' },
+  { to: '/diary',     label: 'Diary',     emoji: '📓' },
+  { to: '/profile',   label: 'Profile',   emoji: '👶' },
 ]
 
 function Navbar() {
   const { currentUser, logout } = useAuth()
+  const { profile } = useProfile()
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
 
@@ -32,11 +35,14 @@ function Navbar() {
         >
           <span /><span /><span />
         </button>
-        <img
-          src="/imgs/logo-horizontal.png"
-          alt="BabyTrack"
-          className="mobile-logo"
-        />
+        <div className="mobile-header-logo">
+          <img
+            src="/imgs/logo-horizontal.png"
+            alt="BabyTrack"
+            className="mobile-logo"
+          />
+        </div>
+        <div className="mobile-header-spacer" />
       </header>
 
       {/* ── Overlay (mobile) ── */}
@@ -47,6 +53,22 @@ function Navbar() {
           aria-hidden="true"
         />
       )}
+
+      {/* ── Mobile bottom nav ── */}
+      <nav className="mobile-bottom-nav">
+        {NAV_LINKS.map(({ to, label, emoji }) => (
+          <NavLink
+            key={to}
+            to={to}
+            className={({ isActive }) =>
+              'bottom-nav-item' + (isActive ? ' bottom-nav-item-active' : '')
+            }
+          >
+            <span className="bottom-nav-emoji">{emoji}</span>
+            <span className="bottom-nav-label">{label}</span>
+          </NavLink>
+        ))}
+      </nav>
 
       {/* ── Sidebar ── */}
       <aside className={`sidebar${open ? ' sidebar-open' : ''}`}>
@@ -65,8 +87,15 @@ function Navbar() {
           </button>
         </div>
 
+        {/* Baby name chip if profile set */}
+        {profile?.babyName && (
+          <div className="sidebar-baby-chip">
+            👶 {profile.babyName}
+          </div>
+        )}
+
         <nav className="sidebar-nav">
-          {NAV_LINKS.map(({ to, label, dot }) => (
+          {NAV_LINKS.map(({ to, label, emoji }) => (
             <NavLink
               key={to}
               to={to}
@@ -75,7 +104,7 @@ function Navbar() {
                 'nav-item' + (isActive ? ' nav-item-active' : '')
               }
             >
-              {dot && <span className={`nav-dot ${dot}`} />}
+              <span className="nav-emoji">{emoji}</span>
               {label}
             </NavLink>
           ))}
@@ -85,10 +114,7 @@ function Navbar() {
           <p className="sidebar-email" title={currentUser?.email}>
             {currentUser?.email}
           </p>
-          <button
-            onClick={handleLogout}
-            className="btn btn-outline btn-full"
-          >
+          <button onClick={handleLogout} className="btn btn-outline btn-full">
             Log out
           </button>
         </div>

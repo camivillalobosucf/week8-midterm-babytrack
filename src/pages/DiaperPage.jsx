@@ -37,7 +37,7 @@ function DiaperPage() {
     <div className="tracker-page">
       <div className="tracker-page-header">
         <div>
-          <h1 className="page-title">Diapers</h1>
+          <h1 className="page-title">🧷 Diapers</h1>
           <p className="page-subtitle">Log wet and dirty diaper changes</p>
         </div>
         <button className="btn btn-primary" onClick={openAdd}>+ Add</button>

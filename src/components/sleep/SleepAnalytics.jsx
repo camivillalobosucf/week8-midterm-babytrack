@@ -6,17 +6,17 @@ function SleepAnalytics({ entries }) {
 
   const cards = [
     {
-      label: 'Total sleep today',
+      label: '😴 Total sleep today',
       value: s.totalSleepMin > 0 ? formatDuration(s.totalSleepMin) : '—',
       sub:   `${s.sessionCount} session${s.sessionCount !== 1 ? 's' : ''}`,
     },
     {
-      label: 'Avg nap length',
+      label: '💤 Avg nap length',
       value: s.avgNapMin > 0 ? formatDuration(s.avgNapMin) : '—',
       sub:   'today',
     },
     {
-      label: 'Longest session',
+      label: '🏆 Longest session',
       value: s.longestMin > 0 ? formatDuration(s.longestMin) : '—',
       sub:   'all time',
     },

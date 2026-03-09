@@ -6,22 +6,22 @@ function FeedingAnalytics({ entries }) {
 
   const cards = [
     {
-      label: 'Feeds today',
+      label: '🍼 Feeds today',
       value: s.todayCount,
       sub:   'total sessions',
     },
     {
-      label: 'Milk today',
+      label: '🥛 Milk today',
       value: s.totalMlToday > 0 ? `${s.totalMlToday} ml` : '—',
       sub:   'bottle feeds',
     },
     {
-      label: 'Avg interval',
+      label: '⏱️ Avg interval',
       value: s.avgIntervalMin != null ? formatDuration(s.avgIntervalMin) : '—',
       sub:   'between feeds',
     },
     {
-      label: 'Bottle / Breast',
+      label: '🍼 / 🤱 Ratio',
       value: s.bottleCount + s.breastCount > 0
         ? `${s.bottlePct}% / ${s.breastPct}%`
         : '—',

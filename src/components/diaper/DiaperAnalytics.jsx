@@ -5,24 +5,24 @@ function DiaperAnalytics({ entries }) {
 
   const cards = [
     {
-      label: 'Diapers today',
+      label: '🧷 Diapers today',
       value: s.diapersToday,
       sub:   'total changes',
     },
     {
-      label: 'Wet / Dirty',
+      label: '💧 / 💩 Ratio',
       value: s.wetCount + s.dirtyCount > 0
         ? `${s.wetPct}% / ${s.dirtyPct}%`
         : '—',
       sub: 'today',
     },
     {
-      label: 'Wet today',
+      label: '💧 Wet today',
       value: s.wetCount,
       sub:   'includes "both"',
     },
     {
-      label: 'Weekly avg',
+      label: '📅 Weekly avg',
       value: s.weeklyAvg,
       sub:   'diapers / day',
     },

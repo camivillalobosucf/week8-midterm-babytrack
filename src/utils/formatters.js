@@ -34,6 +34,18 @@ export function formatDuration(minutes) {
   return `${m}m`
 }
 
+export function formatTimeAgo(ts) {
+  const d = toDate(ts)
+  if (!d) return '—'
+  const diffMin = Math.round((Date.now() - d.getTime()) / 60000)
+  if (diffMin <  1)  return 'just now'
+  if (diffMin < 60)  return `${diffMin}m ago`
+  const diffH = Math.floor(diffMin / 60)
+  if (diffH   < 24)  return `${diffH}h ago`
+  const diffD = Math.floor(diffH / 24)
+  return `${diffD}d ago`
+}
+
 // Convert a Firestore Timestamp (or null) → "YYYY-MM-DDTHH:mm" for datetime-local inputs
 export function timestampToInput(ts) {
   const d = toDate(ts) ?? new Date()
