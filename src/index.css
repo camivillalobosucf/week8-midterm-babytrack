@@ -1,52 +1,100 @@
+/* ===== CSS Variables ===== */
+:root {
+  --color-entry:   #F2B8D9;
+  --color-feeding: #B2FBA5;
+  --color-diaper:  #FBF0A6;
+  --color-sleep:   #B6DDFD;
+
+  --sidebar-width: 260px;
+  --mobile-header-height: 56px;
+
+  --bg-app:      #faf5f8;
+  --bg-white:    #ffffff;
+  --border-soft: #f0e6ef;
+
+  --text-primary:   #1a1a2e;
+  --text-secondary: #6b7280;
+  --text-muted:     #9ca3af;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+}
+
+/* ===== Reset ===== */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+/* ===== Base ===== */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  background-color: #f9fafb;
-  color: #111827;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', sans-serif;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.app-layout {
+  display: flex;
   min-height: 100vh;
 }
 
-/* Global button styles shared across all components */
+.app-content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+@media (max-width: 768px) {
+  .app-content {
+    margin-left: 0;
+    padding: 1.25rem 1rem;
+    padding-top: calc(var(--mobile-header-height) + 1.25rem);
+  }
+}
+
+/* ===== Global Buttons ===== */
 .btn {
   padding: 0.4rem 1rem;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
+  font-family: inherit;
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
   border: none;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s, opacity 0.15s;
 }
 
 .btn:disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: not-allowed;
 }
 
 .btn-primary {
-  background: #6366f1;
-  color: #ffffff;
+  background: var(--color-entry);
+  color: #8b1a5a;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #4f46e5;
+  background: #eda8cc;
 }
 
 .btn-outline {
   background: transparent;
-  color: #6366f1;
-  border: 1px solid #6366f1;
+  color: #be185d;
+  border: 1.5px solid var(--color-entry);
 }
 
 .btn-outline:hover:not(:disabled) {
-  background: #eef2ff;
+  background: #fdf2f8;
 }
 
 .btn-full {
@@ -54,4 +102,18 @@ body {
   padding: 0.625rem 1rem;
   font-size: 1rem;
   margin-top: 0.5rem;
+}
+
+/* ===== Page titles ===== */
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
 }

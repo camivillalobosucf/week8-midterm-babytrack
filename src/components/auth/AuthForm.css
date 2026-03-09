@@ -62,23 +62,33 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  border-color: var(--color-entry);
+  box-shadow: 0 0 0 3px rgba(242, 184, 217, 0.35);
 }
 
 .auth-link {
   text-align: center;
   margin-top: 1.25rem;
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .auth-link a {
-  color: #6366f1;
-  font-weight: 500;
+  color: #be185d;
+  font-weight: 600;
   text-decoration: none;
 }
 
 .auth-link a:hover {
   text-decoration: underline;
+}
+
+/* Auth page wrapper — centers card on the colored background */
+.auth-page {
+  min-height: 100vh;
+  background: var(--bg-app);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1rem;
 }

@@ -1,0 +1,14 @@
+.tracker-page {
+  max-width: 800px;
+}
+
+.tracker-page-banner {
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  margin-bottom: 1.5rem;
+}
+
+.tracker-page-placeholder {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+}
