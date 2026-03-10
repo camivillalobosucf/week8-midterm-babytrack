@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import { useProfile } from '../hooks/useProfile'
 import { calculateAge } from '../utils/babyAge'
 import './ProfilePage.css'
@@ -6,7 +8,14 @@ import './ProfilePage.css'
 const BLOOD_TYPES = ['', 'A+', 'A−', 'B+', 'B−', 'AB+', 'AB−', 'O+', 'O−']
 
 function ProfilePage() {
+  const { logout } = useAuth()
+  const navigate   = useNavigate()
   const { profile, loading, save } = useProfile()
+
+  async function handleLogout() {
+    await logout()
+    navigate('/login')
+  }
 
   const [babyName,     setBabyName]     = useState('')
   const [dob,          setDob]          = useState('')
@@ -182,6 +191,12 @@ function ProfilePage() {
           <div className="form-actions" style={{ marginTop: '1.5rem' }}>
             <button type="submit" className="btn btn-primary btn-full" disabled={saving}>
               {saving ? 'Saving…' : '💾 Save Profile'}
+            </button>
+          </div>
+
+          <div className="profile-logout">
+            <button type="button" onClick={handleLogout} className="btn btn-outline btn-full">
+              Log out
             </button>
           </div>
         </form>

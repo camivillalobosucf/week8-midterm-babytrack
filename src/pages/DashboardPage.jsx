@@ -62,7 +62,7 @@ function DashboardPage() {
   const cards = [
     {
       label:    '🍼 Feedings',
-      to:       '/feeding',
+      to:       '/entries',
       color:    'var(--color-feeding)',
       primary:  feedStats.todayCount,
       secondary: feedStats.totalMlToday > 0
@@ -72,7 +72,7 @@ function DashboardPage() {
     },
     {
       label:    '🧷 Diapers',
-      to:       '/diaper',
+      to:       '/entries',
       color:    'var(--color-diaper)',
       primary:  diaperStats.diapersToday,
       secondary: diaperStats.wetCount + diaperStats.dirtyCount > 0
@@ -82,7 +82,7 @@ function DashboardPage() {
     },
     {
       label:    '😴 Sleep',
-      to:       '/sleep',
+      to:       '/entries',
       color:    'var(--color-sleep)',
       primary:  sleepStats.totalSleepMin > 0
         ? formatDuration(sleepStats.totalSleepMin)

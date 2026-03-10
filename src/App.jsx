@@ -5,9 +5,7 @@ import Navbar from './components/layout/Navbar'
 import LoginPage    from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import DashboardPage from './pages/DashboardPage'
-import FeedingPage  from './pages/FeedingPage'
-import DiaperPage   from './pages/DiaperPage'
-import SleepPage    from './pages/SleepPage'
+import EntriesPage  from './pages/EntriesPage'
 import DiaryPage    from './pages/DiaryPage'
 import ProfilePage  from './pages/ProfilePage'
 
@@ -33,9 +31,10 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route element={<ProtectedLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/feeding"   element={<FeedingPage />} />
-            <Route path="/diaper"    element={<DiaperPage />} />
-            <Route path="/sleep"     element={<SleepPage />} />
+            <Route path="/entries"   element={<EntriesPage />} />
+            <Route path="/feeding"   element={<Navigate to="/entries" replace />} />
+            <Route path="/diaper"    element={<Navigate to="/entries" replace />} />
+            <Route path="/sleep"     element={<Navigate to="/entries" replace />} />
             <Route path="/diary"     element={<DiaryPage />} />
             <Route path="/profile"   element={<ProfilePage />} />
           </Route>

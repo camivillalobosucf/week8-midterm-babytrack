@@ -74,6 +74,12 @@
   margin-bottom: 0.75rem;
 }
 
+.profile-logout {
+  margin-top: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1.5px solid var(--border-soft);
+}
+
 @media (max-width: 480px) {
   .profile-grid {
     grid-template-columns: 1fr;

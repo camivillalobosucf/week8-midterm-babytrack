@@ -6,9 +6,7 @@ import './Navbar.css'
 
 const NAV_LINKS = [
   { to: '/dashboard', label: 'Dashboard', emoji: '🏠' },
-  { to: '/feeding',   label: 'Feedings',  emoji: '🍼' },
-  { to: '/diaper',    label: 'Diapers',   emoji: '🧷' },
-  { to: '/sleep',     label: 'Sleep',     emoji: '😴' },
+  { to: '/entries',   label: 'Entries',   emoji: '📋' },
   { to: '/diary',     label: 'Diary',     emoji: '📓' },
   { to: '/profile',   label: 'Profile',   emoji: '👶' },
 ]
@@ -28,21 +26,11 @@ function Navbar() {
     <>
       {/* ── Mobile top bar ── */}
       <header className="mobile-header">
-        <button
-          className="hamburger"
-          onClick={() => setOpen(true)}
-          aria-label="Open navigation"
-        >
-          <span /><span /><span />
-        </button>
-        <div className="mobile-header-logo">
-          <img
-            src="/imgs/logo-horizontal.png"
-            alt="BabyTrack"
-            className="mobile-logo"
-          />
-        </div>
-        <div className="mobile-header-spacer" />
+        <img
+          src="/imgs/logo-horizontal.png"
+          alt="BabyTrack"
+          className="mobile-logo"
+        />
       </header>
 
       {/* ── Overlay (mobile) ── */}

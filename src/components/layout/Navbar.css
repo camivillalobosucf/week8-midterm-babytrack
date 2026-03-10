@@ -115,6 +115,7 @@
 .mobile-header {
   display: none;
   align-items: center;
+  justify-content: center;
   padding: 0 1rem;
   height: var(--mobile-header-height);
   background: var(--bg-white);
@@ -126,21 +127,9 @@
   z-index: 100;
 }
 
-.mobile-header-logo {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
 .mobile-logo {
   height: 42px;
   width: auto;
-}
-
-.mobile-header-spacer {
-  width: 40px;
-  flex-shrink: 0;
-  margin-left: auto;
 }
 
 /* ===== Mobile bottom nav ===== */
