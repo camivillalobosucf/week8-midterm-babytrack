@@ -138,6 +138,13 @@ html.dark .auth-error {
   border-color: #5c2020;
   color: #f87171;
 }
+html.dark .auth-lang-active {
+  color: #ffffff;
+}
+html.dark .auth-lang-btn:hover {
+  color: #f0a5cc;
+  border-color: #7c3a5e;
+}
 
 /* Auth page wrapper — centers card on the colored background */
 .auth-page {

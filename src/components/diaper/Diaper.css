@@ -13,3 +13,12 @@
   color: #713f12;
   font-weight: 700;
 }
+
+html.dark .diaper-form .btn-toggle-active {
+  border-color: #7a6200;
+  color: #ffffff;
+}
+
+html.dark .diaper-badge {
+  color: #fde68a;
+}

@@ -15,8 +15,9 @@ function RecentActivity({ feedings, diapers, sleeps, diary }) {
     switch (entry._tracker) {
       case 'feeding': {
         if (entry.type === 'breast') {
+          const sideMap = { left: t('feeding.left'), right: t('feeding.right'), both: t('feeding.both') }
           const parts = [t('recent.breast')]
-          if (entry.side)     parts.push(entry.side.charAt(0).toUpperCase() + entry.side.slice(1))
+          if (entry.side)     parts.push(sideMap[entry.side] ?? entry.side)
           if (entry.duration) parts.push(formatDuration(entry.duration))
           return parts.join(' · ')
         }
@@ -27,11 +28,13 @@ function RecentActivity({ feedings, diapers, sleeps, diary }) {
         const map = { wet: t('recent.wet'), dirty: t('recent.dirty'), both: t('recent.wetDirty') }
         return map[entry.type] ?? entry.type
       }
-      case 'sleep':
+      case 'sleep': {
+        const qualityMap = { good: t('sleep.good'), fair: t('sleep.fair'), poor: t('sleep.poor') }
         return [
           formatDuration(entry.duration),
-          entry.quality ? entry.quality.charAt(0).toUpperCase() + entry.quality.slice(1) : null,
+          entry.quality ? (qualityMap[entry.quality] ?? entry.quality) : null,
         ].filter(Boolean).join(' · ')
+      }
       case 'diary':
         return entry.text?.length > 55 ? entry.text.slice(0, 55) + '…' : (entry.text ?? '')
       default:
@@ -63,7 +66,7 @@ function RecentActivity({ feedings, diapers, sleeps, diary }) {
               <span className="recent-tracker">{cfg.label}</span>
               <span className="recent-detail">{getDetail(entry)}</span>
             </div>
-            <span className="recent-time">{formatTimeAgo(entry.timestamp)}</span>
+            <span className="recent-time">{formatTimeAgo(entry.timestamp, t)}</span>
           </div>
         )
       })}

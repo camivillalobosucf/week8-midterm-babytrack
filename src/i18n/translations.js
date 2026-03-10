@@ -41,6 +41,24 @@ export const translations = {
     'auth.err.default-register':   'Failed to create account. Please try again.',
     'auth.err.passwords-no-match': 'Passwords do not match.',
 
+    // Relative time
+    'time.justNow': 'just now',
+    'time.mAgo':    '{{n}}m ago',
+    'time.hAgo':    '{{n}}h ago',
+    'time.dAgo':    '{{n}}d ago',
+
+    // Age
+    'age.days':    '{{n}} day old',
+    'age.days_p':  '{{n}} days old',
+    'age.months':  '{{n}} month old',
+    'age.months_p':'{{n}} months old',
+    'age.monthsDays': '{{m}} month, {{d}} day old',
+    'age.monthsDays_p': '{{m}} months, {{d}} days old',
+    'age.years':   '{{n}} year old',
+    'age.years_p': '{{n}} years old',
+    'age.yearsMonths': '{{y}} yr, {{m}} mo old',
+    'age.yearsMonths_p': '{{y}} yrs, {{m}} mo old',
+
     // Common actions
     'action.edit':   'Edit',
     'action.delete': 'Delete',
@@ -312,6 +330,24 @@ export const translations = {
     'auth.err.weak-password':      'La contraseña debe tener al menos 6 caracteres.',
     'auth.err.default-register':   'Error al crear la cuenta. Por favor intenta de nuevo.',
     'auth.err.passwords-no-match': 'Las contraseñas no coinciden.',
+
+    // Relative time
+    'time.justNow': 'ahora mismo',
+    'time.mAgo':    'hace {{n}}m',
+    'time.hAgo':    'hace {{n}}h',
+    'time.dAgo':    'hace {{n}}d',
+
+    // Age
+    'age.days':    '{{n}} día de vida',
+    'age.days_p':  '{{n}} días de vida',
+    'age.months':  '{{n}} mes de vida',
+    'age.months_p':'{{n}} meses de vida',
+    'age.monthsDays': '{{m}} mes, {{d}} día de vida',
+    'age.monthsDays_p': '{{m}} meses, {{d}} días de vida',
+    'age.years':   '{{n}} año de vida',
+    'age.years_p': '{{n}} años de vida',
+    'age.yearsMonths': '{{y}} año, {{m}} mes de vida',
+    'age.yearsMonths_p': '{{y}} años, {{m}} meses de vida',
 
     // Common actions
     'action.edit':   'Editar',

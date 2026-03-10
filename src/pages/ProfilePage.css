@@ -113,3 +113,10 @@
   border-color: var(--color-entry);
   color: #7c1150;
 }
+html.dark .profile-lang-active {
+  color: #ffffff;
+}
+html.dark .profile-lang-btn:hover {
+  color: #f0a5cc;
+  border-color: #7c3a5e;
+}

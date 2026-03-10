@@ -25,7 +25,7 @@ function todayStart() {
 }
 
 function DashboardPage() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const { entries: feedings, loading: l1, add: addFeeding } = useFeedings()
   const { entries: diapers,  loading: l2, add: addDiaper  } = useDiapers()
   const { entries: sleeps,   loading: l3, add: addSleep   } = useSleeps()
@@ -50,7 +50,8 @@ function DashboardPage() {
 
   const loading = l1 || l2 || l3 || l4
 
-  const today = new Date().toLocaleDateString('en-US', {
+  const localeMap = { es: 'es-MX', en: 'en-US' }
+  const today = new Date().toLocaleDateString(localeMap[language] ?? 'en-US', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
   })
 
@@ -70,7 +71,7 @@ function DashboardPage() {
       secondary: feedStats.totalMlToday > 0
         ? `${feedStats.totalMlToday} ${t('dash.mlToday')}`
         : `${feedStats.todayCount} ${feedStats.todayCount !== 1 ? t('dash.sessions_plural') : t('dash.sessions')} ${t('dash.today')}`,
-      lastTime: feedings[0] ? formatTimeAgo(feedings[0].timestamp) : null,
+      lastTime: feedings[0] ? formatTimeAgo(feedings[0].timestamp, t) : null,
     },
     {
       label:    '🧷 ' + t('dash.quickDiaper'),
@@ -80,7 +81,7 @@ function DashboardPage() {
       secondary: diaperStats.wetCount + diaperStats.dirtyCount > 0
         ? `${diaperStats.wetCount} ${t('diaper.wet').toLowerCase()} · ${diaperStats.dirtyCount} ${t('diaper.dirty').toLowerCase()}`
         : `avg ${diaperStats.weeklyAvg}/day this week`,
-      lastTime: diapers[0] ? formatTimeAgo(diapers[0].timestamp) : null,
+      lastTime: diapers[0] ? formatTimeAgo(diapers[0].timestamp, t) : null,
     },
     {
       label:    '😴 ' + t('dash.quickSleep'),
@@ -92,7 +93,7 @@ function DashboardPage() {
       secondary: sleepStats.sessionCount > 0
         ? `${sleepStats.sessionCount} ${sleepStats.sessionCount !== 1 ? t('dash.sessions_plural') : t('dash.sessions')} ${t('dash.today')}`
         : t('dash.noSessionsToday'),
-      lastTime: sleeps[0] ? formatTimeAgo(sleeps[0].timestamp) : null,
+      lastTime: sleeps[0] ? formatTimeAgo(sleeps[0].timestamp, t) : null,
     },
     {
       label:    '📓 ' + t('dash.quickDiary'),
@@ -100,7 +101,7 @@ function DashboardPage() {
       color:    'var(--color-entry)',
       primary:  diaryToday,
       secondary: diaryToday !== 1 ? t('dash.entriesToday') : t('dash.entryToday'),
-      lastTime: diary[0] ? formatTimeAgo(diary[0].timestamp) : null,
+      lastTime: diary[0] ? formatTimeAgo(diary[0].timestamp, t) : null,
     },
   ]
 
@@ -113,7 +114,7 @@ function DashboardPage() {
   }
 
   const babyName = profile?.babyName
-  const age      = calculateAge(profile?.dob)
+  const age      = calculateAge(profile?.dob, t)
 
   return (
     <div className="dashboard">

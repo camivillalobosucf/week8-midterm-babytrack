@@ -7,22 +7,26 @@ export function toDate(ts) {
   return new Date(ts)
 }
 
-export function formatTime(ts) {
+const LOCALE_MAP = { es: 'es-MX', en: 'en-US' }
+
+export function formatTime(ts, language = 'en') {
   const d = toDate(ts)
   if (!d) return '—'
-  return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+  const locale = LOCALE_MAP[language] ?? 'en-US'
+  return d.toLocaleTimeString(locale, { hour: 'numeric', minute: '2-digit', hour12: true })
 }
 
-export function formatDate(ts) {
+export function formatDate(ts, language = 'en') {
   const d = toDate(ts)
   if (!d) return '—'
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  const locale = LOCALE_MAP[language] ?? 'en-US'
+  return d.toLocaleDateString(locale, { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
-export function formatDateTime(ts) {
+export function formatDateTime(ts, language = 'en') {
   const d = toDate(ts)
   if (!d) return '—'
-  return `${formatDate(ts)}, ${formatTime(ts)}`
+  return `${formatDate(ts, language)}, ${formatTime(ts, language)}`
 }
 
 export function formatDuration(minutes) {
@@ -34,16 +38,26 @@ export function formatDuration(minutes) {
   return `${m}m`
 }
 
-export function formatTimeAgo(ts) {
+// t must supply keys: 'time.justNow', 'time.mAgo', 'time.hAgo', 'time.dAgo'
+export function formatTimeAgo(ts, t) {
   const d = toDate(ts)
   if (!d) return '—'
   const diffMin = Math.round((Date.now() - d.getTime()) / 60000)
-  if (diffMin <  1)  return 'just now'
-  if (diffMin < 60)  return `${diffMin}m ago`
+  if (!t) {
+    // fallback – no translation function provided
+    if (diffMin <  1)  return 'just now'
+    if (diffMin < 60)  return `${diffMin}m ago`
+    const diffH = Math.floor(diffMin / 60)
+    if (diffH   < 24)  return `${diffH}h ago`
+    const diffD = Math.floor(diffH / 24)
+    return `${diffD}d ago`
+  }
+  if (diffMin <  1)  return t('time.justNow')
+  if (diffMin < 60)  return t('time.mAgo').replace('{{n}}', diffMin)
   const diffH = Math.floor(diffMin / 60)
-  if (diffH   < 24)  return `${diffH}h ago`
+  if (diffH   < 24)  return t('time.hAgo').replace('{{n}}', diffH)
   const diffD = Math.floor(diffH / 24)
-  return `${diffD}d ago`
+  return t('time.dAgo').replace('{{n}}', diffD)
 }
 
 // Convert a Firestore Timestamp (or null) → "YYYY-MM-DDTHH:mm" for datetime-local inputs

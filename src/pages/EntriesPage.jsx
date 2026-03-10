@@ -35,10 +35,11 @@ function filterByRange(items, filter) {
 function feedingEmoji(type) {
   return type === 'breast' ? '🤱' : type === 'solid' ? '🥣' : '🍼'
 }
-function feedingDetail(e) {
+function feedingDetail(e, t) {
   if (e.type === 'breast') {
+    const sideMap = { left: t('feeding.left'), right: t('feeding.right'), both: t('feeding.both') }
     const parts = []
-    if (e.side)     parts.push(e.side.charAt(0).toUpperCase() + e.side.slice(1))
+    if (e.side)     parts.push(sideMap[e.side] ?? e.side)
     if (e.duration) parts.push(formatDuration(e.duration))
     return parts.join(' · ')
   }
@@ -240,7 +241,7 @@ function TimelineItem({ entry, onEdit, onDelete }) {
   if (type === 'feeding') {
     emoji     = feedingEmoji(entry.type)
     label     = entry.type === 'breast' ? t('feeding.breast') : entry.type === 'solid' ? t('feeding.solid') : t('feeding.bottle')
-    detail    = feedingDetail(entry)
+    detail    = feedingDetail(entry, t)
     bgColor   = 'var(--color-feeding)'
     textColor = '#166534'
   } else if (type === 'diaper') {
@@ -265,7 +266,7 @@ function TimelineItem({ entry, onEdit, onDelete }) {
 
   const rawTs = type === 'sleep' ? entry.startTime : entry.timestamp
   const timeStr = formatTime(rawTs)
-  const agoStr  = formatTimeAgo(rawTs)
+  const agoStr  = formatTimeAgo(rawTs, t)
 
   return (
     <div className="timeline-item">
@@ -284,8 +285,8 @@ function TimelineItem({ entry, onEdit, onDelete }) {
             <span className="timeline-notes">— {entry.notes}</span>
           )}
           <div className="entry-actions">
-            <button className="btn-action" onClick={onEdit}>Edit</button>
-            <button className="btn-action btn-action-delete" onClick={onDelete}>Delete</button>
+            <button className="btn-action" onClick={onEdit}>{t('action.edit')}</button>
+            <button className="btn-action btn-action-delete" onClick={onDelete}>{t('action.delete')}</button>
           </div>
         </div>
       </div>

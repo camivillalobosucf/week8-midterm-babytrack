@@ -32,7 +32,7 @@ function Navbar() {
       <header className="mobile-header">
         <div className="mobile-header-side" />
         <img
-          src="/imgs/logo-horizontal.png"
+          src="/imgs/logo-horizontal.svg"
           alt="BabyTrack"
           className="mobile-logo"
         />
@@ -74,7 +74,7 @@ function Navbar() {
       <aside className={`sidebar${open ? ' sidebar-open' : ''}`}>
         <div className="sidebar-top">
           <img
-            src="/imgs/logo-stacked.png"
+            src="/imgs/logo-stacked.svg"
             alt="BabyTrack"
             className="sidebar-logo"
           />

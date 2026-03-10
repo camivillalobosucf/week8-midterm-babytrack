@@ -14,6 +14,15 @@
   font-weight: 700;
 }
 
+html.dark .sleep-form .btn-toggle-active {
+  border-color: #1e4d7a;
+  color: #ffffff;
+}
+
+html.dark .sleep-badge {
+  color: #93c5fd;
+}
+
 .sleep-duration-preview {
   font-size: 0.875rem;
   color: var(--text-secondary);

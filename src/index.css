@@ -374,9 +374,21 @@ html.dark {
   --text-primary:   #ede9f5;
   --text-secondary: #9ca3af;
   --text-muted:     #6b7280;
+
+  /* Darker pastel tracker colors for dark mode */
+  --color-feeding: #1e4d2a;
+  --color-diaper:  #4a3c00;
+  --color-sleep:   #0e2d4a;
+  --color-entry:   #4a1535;
 }
 
 /* Buttons */
+html.dark .btn-primary {
+  color: #ffffff;
+}
+html.dark .btn-primary:hover:not(:disabled) {
+  background: #6b2040;
+}
 html.dark .btn-toggle {
   background: var(--bg-white);
   border-color: var(--border-soft);
@@ -395,10 +407,10 @@ html.dark .btn-action-delete:hover {
 }
 html.dark .btn-outline {
   border-color: #7c3a5e;
-  color: #f0a5cc;
+  color: #ffffff;
 }
 html.dark .btn-outline:hover:not(:disabled) {
-  background: #2d1f35;
+  background: #3d1f35;
 }
 
 /* Forms */
@@ -455,13 +467,50 @@ html.dark .entries-filter-tab:hover {
   background: var(--border-soft);
 }
 
-/* Analytics cards keep their brand colors — text needs contrast */
+/* Analytics cards — light text on dark pastel backgrounds */
 html.dark .analytics-label {
-  color: rgba(0, 0, 0, 0.6);
+  color: rgba(255, 255, 255, 0.6);
 }
 html.dark .analytics-value {
-  color: #1a1a2e;
+  color: #ede9f5;
 }
 html.dark .analytics-sub {
-  color: rgba(0, 0, 0, 0.5);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Summary cards — ensure text readable on dark pastels */
+html.dark .summary-card-label,
+html.dark .summary-card-arrow,
+html.dark .summary-card-secondary,
+html.dark .summary-card-time {
+  color: rgba(255, 255, 255, 0.75);
+}
+html.dark .summary-card-primary {
+  color: #ffffff;
+}
+
+/* Timeline badges — light text on dark pastel backgrounds */
+html.dark .timeline-badge {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Quick log buttons */
+html.dark .quick-log-btn {
+  color: rgba(255, 255, 255, 0.9);
+}
+html.dark .quick-log-label {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Entries add buttons */
+html.dark .entries-add-btn {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Stats strip */
+html.dark .entries-stats {
+  background: var(--bg-white);
+}
+html.dark .entries-stat-label {
+  color: var(--text-secondary);
 }
