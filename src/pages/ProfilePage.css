@@ -85,3 +85,31 @@
     grid-template-columns: 1fr;
   }
 }
+
+.profile-lang-row {
+  display: flex;
+  gap: 0.625rem;
+  margin-bottom: 1rem;
+}
+.profile-lang-btn {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: 1.5px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  background: var(--bg-app);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.15s;
+}
+.profile-lang-btn:hover {
+  border-color: #be185d;
+  color: #be185d;
+}
+.profile-lang-active {
+  background: var(--color-entry);
+  border-color: var(--color-entry);
+  color: #7c1150;
+}

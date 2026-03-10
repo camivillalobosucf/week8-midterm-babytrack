@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { Timestamp } from 'firebase/firestore'
+import { useLanguage } from '../../context/LanguageContext'
 import { timestampToInput } from '../../utils/formatters'
 import './Feeding.css'
 
 function FeedingForm({ onSubmit, onCancel, initialEntry }) {
+  const { t } = useLanguage()
   const [type,         setType]         = useState(initialEntry?.type      ?? 'breast')
   const [amount,       setAmount]       = useState(initialEntry?.amount     ?? '')
   const [duration,     setDuration]     = useState(initialEntry?.duration   ?? '')
@@ -28,18 +30,29 @@ function FeedingForm({ onSubmit, onCancel, initialEntry }) {
       if (type === 'breast')                     data.side     = side
       await onSubmit(data)
     } catch {
-      setError('Failed to save. Please try again.')
+      setError(t('form.saveFailed'))
     } finally {
       setLoading(false)
     }
   }
+
+  const TYPES = [
+    { key: 'breast', label: t('feeding.breast') },
+    { key: 'bottle', label: t('feeding.bottle') },
+    { key: 'solid',  label: t('feeding.solid')  },
+  ]
+  const SIDES = [
+    { key: 'left',  label: t('feeding.left')  },
+    { key: 'right', label: t('feeding.right') },
+    { key: 'both',  label: t('feeding.both')  },
+  ]
 
   return (
     <form onSubmit={handleSubmit} className="tracker-form feeding-form">
       {error && <div className="form-error">{error}</div>}
 
       <div className="form-group">
-        <label>Date &amp; Time</label>
+        <label>{t('form.dateTime')}</label>
         <input
           type="datetime-local"
           value={timestampStr}
@@ -49,16 +62,16 @@ function FeedingForm({ onSubmit, onCancel, initialEntry }) {
       </div>
 
       <div className="form-group">
-        <label>Type</label>
+        <label>{t('feeding.type')}</label>
         <div className="btn-group">
-          {['breast', 'bottle', 'solid'].map((t) => (
+          {TYPES.map(({ key, label }) => (
             <button
-              key={t}
+              key={key}
               type="button"
-              className={`btn-toggle${type === t ? ' btn-toggle-active' : ''}`}
-              onClick={() => setType(t)}
+              className={`btn-toggle${type === key ? ' btn-toggle-active' : ''}`}
+              onClick={() => setType(key)}
             >
-              {t.charAt(0).toUpperCase() + t.slice(1)}
+              {label}
             </button>
           ))}
         </div>
@@ -67,26 +80,24 @@ function FeedingForm({ onSubmit, onCancel, initialEntry }) {
       {type === 'breast' && (
         <>
           <div className="form-group">
-            <label>Duration (minutes)</label>
+            <label>{t('feeding.durationMin')}</label>
             <input
-              type="number"
-              min="0"
-              value={duration}
+              type="number" min="0" value={duration}
               onChange={(e) => setDuration(e.target.value)}
               placeholder="e.g. 15"
             />
           </div>
           <div className="form-group">
-            <label>Side</label>
+            <label>{t('feeding.side')}</label>
             <div className="btn-group">
-              {['left', 'right', 'both'].map((s) => (
+              {SIDES.map(({ key, label }) => (
                 <button
-                  key={s}
+                  key={key}
                   type="button"
-                  className={`btn-toggle${side === s ? ' btn-toggle-active' : ''}`}
-                  onClick={() => setSide(s)}
+                  className={`btn-toggle${side === key ? ' btn-toggle-active' : ''}`}
+                  onClick={() => setSide(key)}
                 >
-                  {s.charAt(0).toUpperCase() + s.slice(1)}
+                  {label}
                 </button>
               ))}
             </div>
@@ -96,11 +107,9 @@ function FeedingForm({ onSubmit, onCancel, initialEntry }) {
 
       {(type === 'bottle' || type === 'solid') && (
         <div className="form-group">
-          <label>Amount (ml)</label>
+          <label>{t('feeding.amountMl')}</label>
           <input
-            type="number"
-            min="0"
-            value={amount}
+            type="number" min="0" value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="e.g. 120"
           />
@@ -108,21 +117,21 @@ function FeedingForm({ onSubmit, onCancel, initialEntry }) {
       )}
 
       <div className="form-group">
-        <label>Notes</label>
+        <label>{t('form.notes')}</label>
         <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          placeholder="Optional notes..."
+          placeholder={t('form.notesPlaceholder')}
           rows={2}
         />
       </div>
 
       <div className="form-actions">
         <button type="button" className="btn btn-outline" onClick={onCancel}>
-          Cancel
+          {t('form.cancel')}
         </button>
         <button type="submit" className="btn btn-primary" disabled={loading}>
-          {loading ? 'Saving…' : initialEntry ? 'Update' : 'Add Feeding'}
+          {loading ? t('form.saving') : initialEntry ? t('form.update') : t('feeding.addBtn')}
         </button>
       </div>
     </form>

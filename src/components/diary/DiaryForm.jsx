@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { Timestamp } from 'firebase/firestore'
+import { useLanguage } from '../../context/LanguageContext'
 import { timestampToInput } from '../../utils/formatters'
 import { DIARY_TAGS } from './diaryTags'
 import './Diary.css'
 
 function DiaryForm({ onSubmit, onCancel, initialEntry }) {
+  const { t } = useLanguage()
   const [text,         setText]         = useState(initialEntry?.text  ?? '')
   const [tags,         setTags]         = useState(initialEntry?.tags  ?? [])
   const [timestampStr, setTimestampStr] = useState(timestampToInput(initialEntry?.timestamp))
@@ -19,7 +21,7 @@ function DiaryForm({ onSubmit, onCancel, initialEntry }) {
 
   async function handleSubmit(e) {
     e.preventDefault()
-    if (!text.trim()) return setError('Please write something.')
+    if (!text.trim()) return setError(t('diary.writeSomething'))
     setError('')
     setLoading(true)
     try {
@@ -29,7 +31,7 @@ function DiaryForm({ onSubmit, onCancel, initialEntry }) {
         timestamp: Timestamp.fromDate(new Date(timestampStr)),
       })
     } catch {
-      setError('Failed to save. Please try again.')
+      setError(t('form.saveFailed'))
     } finally {
       setLoading(false)
     }
@@ -40,7 +42,7 @@ function DiaryForm({ onSubmit, onCancel, initialEntry }) {
       {error && <div className="form-error">{error}</div>}
 
       <div className="form-group">
-        <label>Date &amp; Time</label>
+        <label>{t('form.dateTime')}</label>
         <input
           type="datetime-local"
           value={timestampStr}
@@ -50,18 +52,20 @@ function DiaryForm({ onSubmit, onCancel, initialEntry }) {
       </div>
 
       <div className="form-group">
-        <label>Entry</label>
+        <label>{t('diary.entry')}</label>
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Write about your baby's day..."
+          placeholder={t('diary.entryPlaceholder')}
           rows={4}
           required
         />
       </div>
 
       <div className="form-group">
-        <label>Tags <span className="form-hint">(tap to select)</span></label>
+        <label>
+          {t('diary.tags')} <span className="form-hint">{t('diary.tagsHint')}</span>
+        </label>
         <div className="tag-picker">
           {DIARY_TAGS.map((tag) => (
             <button
@@ -70,7 +74,7 @@ function DiaryForm({ onSubmit, onCancel, initialEntry }) {
               className={`tag-chip${tags.includes(tag) ? ' tag-chip-active' : ''}`}
               onClick={() => toggleTag(tag)}
             >
-              {tag}
+              {t(`tag.${tag}`)}
             </button>
           ))}
         </div>
@@ -78,10 +82,10 @@ function DiaryForm({ onSubmit, onCancel, initialEntry }) {
 
       <div className="form-actions">
         <button type="button" className="btn btn-outline" onClick={onCancel}>
-          Cancel
+          {t('form.cancel')}
         </button>
         <button type="submit" className="btn btn-primary" disabled={loading}>
-          {loading ? 'Saving…' : initialEntry ? 'Update' : 'Add Entry'}
+          {loading ? t('form.saving') : initialEntry ? t('form.update') : t('diary.addEntryBtn')}
         </button>
       </div>
     </form>

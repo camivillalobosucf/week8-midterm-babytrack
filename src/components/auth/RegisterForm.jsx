@@ -1,39 +1,40 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { useLanguage } from '../../context/LanguageContext'
+import { saveProfile } from '../../services/profileService'
 import './AuthForm.css'
-
-function getErrorMessage(code) {
-  switch (code) {
-    case 'auth/email-already-in-use':
-      return 'An account with this email already exists.'
-    case 'auth/invalid-email':
-      return 'Please enter a valid email address.'
-    case 'auth/weak-password':
-      return 'Password must be at least 6 characters.'
-    default:
-      return 'Failed to create account. Please try again.'
-  }
-}
 
 function RegisterForm() {
   const { register } = useAuth()
+  const { t, language, setLanguage } = useLanguage()
   const navigate = useNavigate()
-  const [email, setEmail] = useState('')
+  const [email,    setEmail]    = useState('')
   const [password, setPassword] = useState('')
-  const [confirm, setConfirm] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [confirm,  setConfirm]  = useState('')
+  const [error,    setError]    = useState('')
+  const [loading,  setLoading]  = useState(false)
+
+  function getErrorMessage(code) {
+    switch (code) {
+      case 'auth/email-already-in-use': return t('auth.err.email-in-use')
+      case 'auth/invalid-email':        return t('auth.err.invalid-email')
+      case 'auth/weak-password':        return t('auth.err.weak-password')
+      default: return t('auth.err.default-register')
+    }
+  }
 
   async function handleSubmit(e) {
     e.preventDefault()
-    if (password !== confirm) {
-      return setError('Passwords do not match.')
-    }
+    if (password !== confirm) return setError(t('auth.err.passwords-no-match'))
     setError('')
     setLoading(true)
     try {
-      await register(email, password)
+      const cred = await register(email, password)
+      // Save chosen language to Firestore immediately
+      if (language !== 'en') {
+        await saveProfile(cred.user.uid, { language })
+      }
       navigate('/dashboard')
     } catch (err) {
       setError(getErrorMessage(err.code))
@@ -44,58 +45,56 @@ function RegisterForm() {
 
   return (
     <div className="auth-card">
-      <h2 className="auth-title">Create your account</h2>
-      <p className="auth-subtitle">Start tracking your baby&apos;s activities</p>
+      <div className="auth-lang-row">
+        <button
+          type="button"
+          className={'auth-lang-btn' + (language === 'en' ? ' auth-lang-active' : '')}
+          onClick={() => setLanguage('en')}
+        >English</button>
+        <button
+          type="button"
+          className={'auth-lang-btn' + (language === 'es' ? ' auth-lang-active' : '')}
+          onClick={() => setLanguage('es')}
+        >Español</button>
+      </div>
+
+      <h2 className="auth-title">{t('auth.createAccount')}</h2>
+      <p className="auth-subtitle">{t('auth.registerSubtitle')}</p>
 
       {error && <div className="auth-error">{error}</div>}
 
       <form onSubmit={handleSubmit} className="auth-form">
         <div className="form-group">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email">{t('auth.email')}</label>
           <input
-            id="email"
-            type="email"
-            value={email}
+            id="email" type="email" value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
-            placeholder="you@example.com"
-            autoComplete="email"
+            required placeholder="you@example.com" autoComplete="email"
           />
         </div>
-
         <div className="form-group">
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">{t('auth.password')}</label>
           <input
-            id="password"
-            type="password"
-            value={password}
+            id="password" type="password" value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
-            placeholder="At least 6 characters"
-            autoComplete="new-password"
+            required placeholder={t('auth.passwordPlaceholder')} autoComplete="new-password"
           />
         </div>
-
         <div className="form-group">
-          <label htmlFor="confirm">Confirm password</label>
+          <label htmlFor="confirm">{t('auth.confirmPassword')}</label>
           <input
-            id="confirm"
-            type="password"
-            value={confirm}
+            id="confirm" type="password" value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
-            required
-            placeholder="••••••••"
-            autoComplete="new-password"
+            required placeholder="••••••••" autoComplete="new-password"
           />
         </div>
-
         <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
-          {loading ? 'Creating account...' : 'Create account'}
+          {loading ? t('auth.creatingAccount') : t('auth.registerBtn')}
         </button>
       </form>
 
       <p className="auth-link">
-        Already have an account? <Link to="/login">Log in</Link>
+        {t('auth.hasAccount')} <Link to="/login">{t('auth.logIn')}</Link>
       </p>
     </div>
   )

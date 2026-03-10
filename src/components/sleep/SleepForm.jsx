@@ -1,9 +1,11 @@
 import { useState, useMemo } from 'react'
 import { Timestamp } from 'firebase/firestore'
+import { useLanguage } from '../../context/LanguageContext'
 import { timestampToInput, formatDuration } from '../../utils/formatters'
 import './Sleep.css'
 
 function SleepForm({ onSubmit, onCancel, initialEntry }) {
+  const { t } = useLanguage()
   const [startStr,  setStartStr]  = useState(timestampToInput(initialEntry?.startTime))
   const [endStr,    setEndStr]    = useState(timestampToInput(initialEntry?.endTime))
   const [quality,   setQuality]   = useState(initialEntry?.quality ?? 'good')
@@ -11,7 +13,6 @@ function SleepForm({ onSubmit, onCancel, initialEntry }) {
   const [loading,   setLoading]   = useState(false)
   const [error,     setError]     = useState('')
 
-  // Auto-computed duration shown as preview
   const durationMin = useMemo(() => {
     if (!startStr || !endStr) return null
     const diff = Math.round((new Date(endStr) - new Date(startStr)) / 60000)
@@ -20,7 +21,7 @@ function SleepForm({ onSubmit, onCancel, initialEntry }) {
 
   async function handleSubmit(e) {
     e.preventDefault()
-    if (!durationMin) return setError('End time must be after start time.')
+    if (!durationMin) return setError(t('sleep.endAfterStart'))
     setError('')
     setLoading(true)
     try {
@@ -31,76 +32,77 @@ function SleepForm({ onSubmit, onCancel, initialEntry }) {
         duration:  durationMin,
         quality,
         notes:     notes.trim(),
-        timestamp: Timestamp.fromDate(startDate), // for consistent ordering
+        timestamp: Timestamp.fromDate(startDate),
       })
     } catch {
-      setError('Failed to save. Please try again.')
+      setError(t('form.saveFailed'))
     } finally {
       setLoading(false)
     }
   }
+
+  const QUALITIES = [
+    { key: 'good', label: t('sleep.good') },
+    { key: 'fair', label: t('sleep.fair') },
+    { key: 'poor', label: t('sleep.poor') },
+  ]
 
   return (
     <form onSubmit={handleSubmit} className="tracker-form sleep-form">
       {error && <div className="form-error">{error}</div>}
 
       <div className="form-group">
-        <label>Start Time</label>
+        <label>{t('sleep.startTime')}</label>
         <input
-          type="datetime-local"
-          value={startStr}
-          onChange={(e) => setStartStr(e.target.value)}
-          required
+          type="datetime-local" value={startStr}
+          onChange={(e) => setStartStr(e.target.value)} required
         />
       </div>
 
       <div className="form-group">
-        <label>End Time</label>
+        <label>{t('sleep.endTime')}</label>
         <input
-          type="datetime-local"
-          value={endStr}
-          onChange={(e) => setEndStr(e.target.value)}
-          required
+          type="datetime-local" value={endStr}
+          onChange={(e) => setEndStr(e.target.value)} required
         />
         {durationMin && (
           <span className="sleep-duration-preview">
-            Duration: {formatDuration(durationMin)}
+            {t('sleep.duration')}: {formatDuration(durationMin)}
           </span>
         )}
       </div>
 
       <div className="form-group">
-        <label>Quality</label>
+        <label>{t('sleep.quality')}</label>
         <div className="btn-group">
-          {['good', 'fair', 'poor'].map((q) => (
+          {QUALITIES.map(({ key, label }) => (
             <button
-              key={q}
-              type="button"
-              className={`btn-toggle${quality === q ? ' btn-toggle-active' : ''}`}
-              onClick={() => setQuality(q)}
+              key={key} type="button"
+              className={`btn-toggle${quality === key ? ' btn-toggle-active' : ''}`}
+              onClick={() => setQuality(key)}
             >
-              {q.charAt(0).toUpperCase() + q.slice(1)}
+              {label}
             </button>
           ))}
         </div>
       </div>
 
       <div className="form-group">
-        <label>Notes</label>
+        <label>{t('form.notes')}</label>
         <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          placeholder="Optional notes..."
+          placeholder={t('form.notesPlaceholder')}
           rows={2}
         />
       </div>
 
       <div className="form-actions">
         <button type="button" className="btn btn-outline" onClick={onCancel}>
-          Cancel
+          {t('form.cancel')}
         </button>
         <button type="submit" className="btn btn-primary" disabled={loading}>
-          {loading ? 'Saving…' : initialEntry ? 'Update' : 'Add Sleep'}
+          {loading ? t('form.saving') : initialEntry ? t('form.update') : t('sleep.addBtn')}
         </button>
       </div>
     </form>

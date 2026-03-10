@@ -1,41 +1,44 @@
+import { useLanguage } from '../../context/LanguageContext'
 import { toDate, formatTimeAgo, formatDuration } from '../../utils/formatters'
 
-const TRACKER = {
-  feeding: { color: 'var(--color-feeding)', label: 'Feeding' },
-  diaper:  { color: 'var(--color-diaper)',  label: 'Diaper'  },
-  sleep:   { color: 'var(--color-sleep)',   label: 'Sleep'   },
-  diary:   { color: 'var(--color-entry)',   label: 'Diary'   },
-}
-
-function getDetail(entry) {
-  switch (entry._tracker) {
-    case 'feeding': {
-      if (entry.type === 'breast') {
-        const parts = ['Breast']
-        if (entry.side)     parts.push(entry.side.charAt(0).toUpperCase() + entry.side.slice(1))
-        if (entry.duration) parts.push(formatDuration(entry.duration))
-        return parts.join(' · ')
-      }
-      if (entry.type === 'bottle') return `Bottle${entry.amount ? ` · ${entry.amount} ml` : ''}`
-      return 'Solid food'
-    }
-    case 'diaper': {
-      const map = { wet: 'Wet', dirty: 'Dirty', both: 'Wet + Dirty' }
-      return map[entry.type] ?? entry.type
-    }
-    case 'sleep':
-      return [
-        formatDuration(entry.duration),
-        entry.quality ? entry.quality.charAt(0).toUpperCase() + entry.quality.slice(1) : null,
-      ].filter(Boolean).join(' · ')
-    case 'diary':
-      return entry.text?.length > 55 ? entry.text.slice(0, 55) + '…' : (entry.text ?? '')
-    default:
-      return ''
-  }
-}
-
 function RecentActivity({ feedings, diapers, sleeps, diary }) {
+  const { t } = useLanguage()
+
+  const TRACKER = {
+    feeding: { color: 'var(--color-feeding)', label: t('recent.feeding') },
+    diaper:  { color: 'var(--color-diaper)',  label: t('recent.diaper')  },
+    sleep:   { color: 'var(--color-sleep)',   label: t('recent.sleep')   },
+    diary:   { color: 'var(--color-entry)',   label: t('recent.diary')   },
+  }
+
+  function getDetail(entry) {
+    switch (entry._tracker) {
+      case 'feeding': {
+        if (entry.type === 'breast') {
+          const parts = [t('recent.breast')]
+          if (entry.side)     parts.push(entry.side.charAt(0).toUpperCase() + entry.side.slice(1))
+          if (entry.duration) parts.push(formatDuration(entry.duration))
+          return parts.join(' · ')
+        }
+        if (entry.type === 'bottle') return `${t('recent.bottle')}${entry.amount ? ` · ${entry.amount} ml` : ''}`
+        return t('recent.solid')
+      }
+      case 'diaper': {
+        const map = { wet: t('recent.wet'), dirty: t('recent.dirty'), both: t('recent.wetDirty') }
+        return map[entry.type] ?? entry.type
+      }
+      case 'sleep':
+        return [
+          formatDuration(entry.duration),
+          entry.quality ? entry.quality.charAt(0).toUpperCase() + entry.quality.slice(1) : null,
+        ].filter(Boolean).join(' · ')
+      case 'diary':
+        return entry.text?.length > 55 ? entry.text.slice(0, 55) + '…' : (entry.text ?? '')
+      default:
+        return ''
+    }
+  }
+
   const combined = [
     ...feedings.map((e) => ({ ...e, _tracker: 'feeding' })),
     ...diapers.map((e)  => ({ ...e, _tracker: 'diaper'  })),
@@ -46,11 +49,7 @@ function RecentActivity({ feedings, diapers, sleeps, diary }) {
   ).slice(0, 10)
 
   if (combined.length === 0) {
-    return (
-      <div className="recent-empty">
-        No activity yet — start by logging a feeding, diaper change, or sleep session.
-      </div>
-    )
+    return <div className="recent-empty">{t('recent.empty')}</div>
   }
 
   return (

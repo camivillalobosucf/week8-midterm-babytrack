@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useProfile } from '../hooks/useProfile'
+import { useLanguage } from '../context/LanguageContext'
 import { calculateAge } from '../utils/babyAge'
 import './ProfilePage.css'
 
@@ -11,6 +12,7 @@ function ProfilePage() {
   const { logout } = useAuth()
   const navigate   = useNavigate()
   const { profile, loading, save } = useProfile()
+  const { t, language, setLanguage } = useLanguage()
 
   async function handleLogout() {
     await logout()
@@ -61,11 +63,12 @@ function ProfilePage() {
         pediatrician: pediatrician.trim(),
         allergies:    allergies.trim(),
         notes:        notes.trim(),
+        language,
       })
       setSaved(true)
       setTimeout(() => setSaved(false), 2500)
     } catch {
-      setError('Failed to save. Please try again.')
+      setError(t('profile.saveFailed'))
     } finally {
       setSaving(false)
     }
@@ -86,26 +89,26 @@ function ProfilePage() {
       </div>
 
       {loading ? (
-        <p className="loading-text">Loading…</p>
+        <p className="loading-text">{t('profile.loading')}</p>
       ) : (
         <form onSubmit={handleSubmit} className="profile-form-card">
           {error  && <div className="form-error">{error}</div>}
-          {saved  && <div className="profile-saved">✅ Profile saved!</div>}
+          {saved  && <div className="profile-saved">{t('profile.saved')}</div>}
 
           {/* Basic info */}
-          <h3 className="profile-section-title">👶 Basic Info</h3>
+          <h3 className="profile-section-title">{t('profile.basicInfo')}</h3>
           <div className="profile-grid">
             <div className="form-group">
-              <label>Baby&apos;s Name</label>
+              <label>{t('profile.babyName')}</label>
               <input
                 type="text"
                 value={babyName}
                 onChange={(e) => setBabyName(e.target.value)}
-                placeholder="e.g. Emma"
+                placeholder={t('profile.babyNamePlaceholder')}
               />
             </div>
             <div className="form-group">
-              <label>Date of Birth 🎂</label>
+              <label>{t('profile.dob')}</label>
               <input
                 type="date"
                 value={dob}
@@ -113,19 +116,19 @@ function ProfilePage() {
               />
             </div>
             <div className="form-group">
-              <label>Gender</label>
+              <label>{t('profile.gender')}</label>
               <select value={gender} onChange={(e) => setGender(e.target.value)}>
-                <option value="">Prefer not to say</option>
-                <option value="girl">Girl 🎀</option>
-                <option value="boy">Boy 💙</option>
-                <option value="other">Other</option>
+                <option value="">{t('gender.unknown')}</option>
+                <option value="girl">{t('gender.girl')}</option>
+                <option value="boy">{t('gender.boy')}</option>
+                <option value="other">{t('gender.other')}</option>
               </select>
             </div>
             <div className="form-group">
-              <label>Blood Type 🩸</label>
+              <label>{t('profile.bloodType')}</label>
               <select value={bloodType} onChange={(e) => setBloodType(e.target.value)}>
-                {BLOOD_TYPES.map((t) => (
-                  <option key={t} value={t}>{t || 'Unknown'}</option>
+                {BLOOD_TYPES.map((bt) => (
+                  <option key={bt} value={bt}>{bt || t('gender.unknown')}</option>
                 ))}
               </select>
             </div>
@@ -133,70 +136,87 @@ function ProfilePage() {
 
           {/* Birth measurements */}
           <h3 className="profile-section-title" style={{ marginTop: '1.5rem' }}>
-            📏 Birth Measurements
+            {t('profile.birthMeasurements')}
           </h3>
           <div className="profile-grid">
             <div className="form-group">
-              <label>Birth Weight ⚖️</label>
+              <label>{t('profile.birthWeight')}</label>
               <input
                 type="text"
                 value={birthWeight}
                 onChange={(e) => setBirthWeight(e.target.value)}
-                placeholder="e.g. 3.5 kg"
+                placeholder={t('profile.birthWeightPlaceholder')}
               />
             </div>
             <div className="form-group">
-              <label>Birth Length 📏</label>
+              <label>{t('profile.birthLength')}</label>
               <input
                 type="text"
                 value={birthLength}
                 onChange={(e) => setBirthLength(e.target.value)}
-                placeholder="e.g. 50 cm"
+                placeholder={t('profile.birthLengthPlaceholder')}
               />
             </div>
           </div>
 
           {/* Health */}
           <h3 className="profile-section-title" style={{ marginTop: '1.5rem' }}>
-            🏥 Health
+            {t('profile.health')}
           </h3>
           <div className="form-group">
-            <label>Pediatrician 👨‍⚕️</label>
+            <label>{t('profile.pediatrician')}</label>
             <input
               type="text"
               value={pediatrician}
               onChange={(e) => setPediatrician(e.target.value)}
-              placeholder="Dr. name or clinic"
+              placeholder={t('profile.pediatricianPlaceholder')}
             />
           </div>
           <div className="form-group" style={{ marginTop: '1rem' }}>
-            <label>Allergies / Intolerances ⚠️</label>
+            <label>{t('profile.allergies')}</label>
             <textarea
               value={allergies}
               onChange={(e) => setAllergies(e.target.value)}
-              placeholder="List any known allergies..."
+              placeholder={t('profile.allergiesPlaceholder')}
               rows={2}
             />
           </div>
           <div className="form-group" style={{ marginTop: '1rem' }}>
-            <label>Notes 📝</label>
+            <label>{t('profile.notes')}</label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Any other important notes..."
+              placeholder={t('profile.notesPlaceholder')}
               rows={3}
             />
           </div>
 
+          {/* Language selector */}
+          <h3 className="profile-section-title" style={{ marginTop: '1.5rem' }}>
+            {t('profile.language')}
+          </h3>
+          <div className="profile-lang-row">
+            <button
+              type="button"
+              className={'profile-lang-btn' + (language === 'en' ? ' profile-lang-active' : '')}
+              onClick={() => setLanguage('en')}
+            >English</button>
+            <button
+              type="button"
+              className={'profile-lang-btn' + (language === 'es' ? ' profile-lang-active' : '')}
+              onClick={() => setLanguage('es')}
+            >Español</button>
+          </div>
+
           <div className="form-actions" style={{ marginTop: '1.5rem' }}>
             <button type="submit" className="btn btn-primary btn-full" disabled={saving}>
-              {saving ? 'Saving…' : '💾 Save Profile'}
+              {saving ? t('profile.saving') : t('profile.saveBtn')}
             </button>
           </div>
 
           <div className="profile-logout">
             <button type="button" onClick={handleLogout} className="btn btn-outline btn-full">
-              Log out
+              {t('profile.logout')}
             </button>
           </div>
         </form>

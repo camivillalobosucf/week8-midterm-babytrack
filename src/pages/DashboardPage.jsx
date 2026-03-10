@@ -4,6 +4,7 @@ import { useDiapers }  from '../hooks/useDiapers'
 import { useSleeps }   from '../hooks/useSleeps'
 import { useDiary }    from '../hooks/useDiary'
 import { useProfile }  from '../hooks/useProfile'
+import { useLanguage } from '../context/LanguageContext'
 import SummaryCard     from '../components/dashboard/SummaryCard'
 import RecentActivity  from '../components/dashboard/RecentActivity'
 import FeedingForm     from '../components/feeding/FeedingForm'
@@ -18,26 +19,13 @@ import { toDate, formatDuration, formatTimeAgo } from '../utils/formatters'
 import { calculateAge } from '../utils/babyAge'
 import './DashboardPage.css'
 
-const QUICK_FORMS = [
-  { key: 'feeding', emoji: '🍼', label: 'Feeding', color: 'var(--color-feeding)' },
-  { key: 'diaper',  emoji: '🧷', label: 'Diaper',  color: 'var(--color-diaper)'  },
-  { key: 'sleep',   emoji: '😴', label: 'Sleep',   color: 'var(--color-sleep)'   },
-  { key: 'diary',   emoji: '📓', label: 'Diary',   color: 'var(--color-entry)'   },
-]
-
-const MODAL_TITLES = {
-  feeding: '🍼 Log Feeding',
-  diaper:  '🧷 Log Diaper Change',
-  sleep:   '😴 Log Sleep Session',
-  diary:   '📓 New Diary Entry',
-}
-
 function todayStart() {
   const d = new Date()
   return new Date(d.getFullYear(), d.getMonth(), d.getDate())
 }
 
 function DashboardPage() {
+  const { t } = useLanguage()
   const { entries: feedings, loading: l1, add: addFeeding } = useFeedings()
   const { entries: diapers,  loading: l2, add: addDiaper  } = useDiapers()
   const { entries: sleeps,   loading: l3, add: addSleep   } = useSleeps()
@@ -45,6 +33,20 @@ function DashboardPage() {
   const { profile } = useProfile()
 
   const [formType, setFormType] = useState(null)
+
+  const QUICK_FORMS = [
+    { key: 'feeding', emoji: '🍼', label: t('dash.quickFeeding'), color: 'var(--color-feeding)' },
+    { key: 'diaper',  emoji: '🧷', label: t('dash.quickDiaper'),  color: 'var(--color-diaper)'  },
+    { key: 'sleep',   emoji: '😴', label: t('dash.quickSleep'),   color: 'var(--color-sleep)'   },
+    { key: 'diary',   emoji: '📓', label: t('dash.quickDiary'),   color: 'var(--color-entry)'   },
+  ]
+
+  const MODAL_TITLES = {
+    feeding: t('entries.logFeeding'),
+    diaper:  t('entries.logDiaper'),
+    sleep:   t('entries.logSleep'),
+    diary:   t('diary.logModal'),
+  }
 
   const loading = l1 || l2 || l3 || l4
 
@@ -61,43 +63,43 @@ function DashboardPage() {
 
   const cards = [
     {
-      label:    '🍼 Feedings',
+      label:    '🍼 ' + t('dash.quickFeeding'),
       to:       '/entries',
       color:    'var(--color-feeding)',
       primary:  feedStats.todayCount,
       secondary: feedStats.totalMlToday > 0
-        ? `${feedStats.totalMlToday} ml today`
-        : `${feedStats.todayCount} session${feedStats.todayCount !== 1 ? 's' : ''}`,
+        ? `${feedStats.totalMlToday} ${t('dash.mlToday')}`
+        : `${feedStats.todayCount} ${feedStats.todayCount !== 1 ? t('dash.sessions_plural') : t('dash.sessions')} ${t('dash.today')}`,
       lastTime: feedings[0] ? formatTimeAgo(feedings[0].timestamp) : null,
     },
     {
-      label:    '🧷 Diapers',
+      label:    '🧷 ' + t('dash.quickDiaper'),
       to:       '/entries',
       color:    'var(--color-diaper)',
       primary:  diaperStats.diapersToday,
       secondary: diaperStats.wetCount + diaperStats.dirtyCount > 0
-        ? `${diaperStats.wetCount} wet · ${diaperStats.dirtyCount} dirty`
+        ? `${diaperStats.wetCount} ${t('diaper.wet').toLowerCase()} · ${diaperStats.dirtyCount} ${t('diaper.dirty').toLowerCase()}`
         : `avg ${diaperStats.weeklyAvg}/day this week`,
       lastTime: diapers[0] ? formatTimeAgo(diapers[0].timestamp) : null,
     },
     {
-      label:    '😴 Sleep',
+      label:    '😴 ' + t('dash.quickSleep'),
       to:       '/entries',
       color:    'var(--color-sleep)',
       primary:  sleepStats.totalSleepMin > 0
         ? formatDuration(sleepStats.totalSleepMin)
         : sleepStats.sessionCount,
       secondary: sleepStats.sessionCount > 0
-        ? `${sleepStats.sessionCount} session${sleepStats.sessionCount !== 1 ? 's' : ''} today`
-        : 'no sessions today',
+        ? `${sleepStats.sessionCount} ${sleepStats.sessionCount !== 1 ? t('dash.sessions_plural') : t('dash.sessions')} ${t('dash.today')}`
+        : t('dash.noSessionsToday'),
       lastTime: sleeps[0] ? formatTimeAgo(sleeps[0].timestamp) : null,
     },
     {
-      label:    '📓 Diary',
+      label:    '📓 ' + t('dash.quickDiary'),
       to:       '/diary',
       color:    'var(--color-entry)',
       primary:  diaryToday,
-      secondary: `entr${diaryToday !== 1 ? 'ies' : 'y'} today`,
+      secondary: diaryToday !== 1 ? t('dash.entriesToday') : t('dash.entryToday'),
       lastTime: diary[0] ? formatTimeAgo(diary[0].timestamp) : null,
     },
   ]
@@ -117,14 +119,16 @@ function DashboardPage() {
     <div className="dashboard">
       <div className="dashboard-header">
         <h1 className="page-title">
-          {babyName ? `${babyName}'s Dashboard 👶` : 'Dashboard 🏠'}
+          {babyName
+            ? t('dash.namedTitle').replace('{{name}}', babyName)
+            : t('dash.title')}
         </h1>
         {age && <p className="dashboard-age">{age} 🎂</p>}
         <p className="page-subtitle">{today}</p>
       </div>
 
       {/* Quick log row */}
-      <p className="quick-log-heading">➕ Add a new entry</p>
+      <p className="quick-log-heading">➕ {t('dash.addNewEntry')}</p>
       <div className="quick-log">
         {QUICK_FORMS.map(({ key, emoji, label, color }) => (
           <button
@@ -140,17 +144,17 @@ function DashboardPage() {
       </div>
 
       {loading ? (
-        <p className="loading-text">Loading…</p>
+        <p className="loading-text">{t('dash.loading')}</p>
       ) : (
         <>
-          <h2 className="dash-section-label">Today</h2>
+          <h2 className="dash-section-label">{t('dash.today')}</h2>
           <div className="summary-grid">
             {cards.map((card) => (
-              <SummaryCard key={card.to} {...card} />
+              <SummaryCard key={card.to + card.label} {...card} />
             ))}
           </div>
 
-          <h2 className="dash-section-label">Recent Activity</h2>
+          <h2 className="dash-section-label">{t('dash.recentActivity')}</h2>
           <RecentActivity
             feedings={feedings}
             diapers={diapers}

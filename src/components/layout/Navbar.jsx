@@ -2,20 +2,24 @@ import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useProfile } from '../../hooks/useProfile'
+import { useTheme } from '../../hooks/useTheme'
+import { useLanguage } from '../../context/LanguageContext'
 import './Navbar.css'
-
-const NAV_LINKS = [
-  { to: '/dashboard', label: 'Dashboard', emoji: '🏠' },
-  { to: '/entries',   label: 'Entries',   emoji: '📋' },
-  { to: '/diary',     label: 'Diary',     emoji: '📓' },
-  { to: '/profile',   label: 'Profile',   emoji: '👶' },
-]
 
 function Navbar() {
   const { currentUser, logout } = useAuth()
   const { profile } = useProfile()
+  const { isDark, toggle } = useTheme()
+  const { t } = useLanguage()
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
+
+  const NAV_LINKS = [
+    { to: '/dashboard', label: t('nav.dashboard'), emoji: '🏠' },
+    { to: '/entries',   label: t('nav.entries'),   emoji: '📋' },
+    { to: '/diary',     label: t('nav.diary'),     emoji: '📓' },
+    { to: '/profile',   label: t('nav.profile'),   emoji: '👶' },
+  ]
 
   async function handleLogout() {
     await logout()
@@ -26,21 +30,20 @@ function Navbar() {
     <>
       {/* ── Mobile top bar ── */}
       <header className="mobile-header">
+        <div className="mobile-header-side" />
         <img
           src="/imgs/logo-horizontal.png"
           alt="BabyTrack"
           className="mobile-logo"
         />
+        <button
+          className="mobile-theme-btn"
+          onClick={toggle}
+          aria-label="Toggle dark mode"
+        >
+          {isDark ? '☀️' : '🌙'}
+        </button>
       </header>
-
-      {/* ── Overlay (mobile) ── */}
-      {open && (
-        <div
-          className="sidebar-overlay"
-          onClick={() => setOpen(false)}
-          aria-hidden="true"
-        />
-      )}
 
       {/* ── Mobile bottom nav ── */}
       <nav className="mobile-bottom-nav">
@@ -57,6 +60,15 @@ function Navbar() {
           </NavLink>
         ))}
       </nav>
+
+      {/* ── Overlay (mobile) ── */}
+      {open && (
+        <div
+          className="sidebar-overlay"
+          onClick={() => setOpen(false)}
+          aria-hidden="true"
+        />
+      )}
 
       {/* ── Sidebar ── */}
       <aside className={`sidebar${open ? ' sidebar-open' : ''}`}>
@@ -75,7 +87,6 @@ function Navbar() {
           </button>
         </div>
 
-        {/* Baby name chip if profile set */}
         {profile?.babyName && (
           <div className="sidebar-baby-chip">
             👶 {profile.babyName}
@@ -99,11 +110,14 @@ function Navbar() {
         </nav>
 
         <div className="sidebar-footer">
+          <button className="theme-toggle-btn" onClick={toggle}>
+            {isDark ? t('theme.light') : t('theme.dark')}
+          </button>
           <p className="sidebar-email" title={currentUser?.email}>
             {currentUser?.email}
           </p>
           <button onClick={handleLogout} className="btn btn-outline btn-full">
-            Log out
+            {t('profile.logout')}
           </button>
         </div>
       </aside>

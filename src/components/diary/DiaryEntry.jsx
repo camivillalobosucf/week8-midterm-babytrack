@@ -1,15 +1,18 @@
+import { useLanguage } from '../../context/LanguageContext'
 import { formatDateTime } from '../../utils/formatters'
 import './Diary.css'
 
 function DiaryEntry({ entry, onEdit, onDelete }) {
+  const { t } = useLanguage()
+
   return (
     <div className="diary-entry-card">
       <div className="diary-entry-header">
         <span className="entry-time">{formatDateTime(entry.timestamp)}</span>
         <div className="entry-actions">
-          <button className="btn-action" onClick={() => onEdit(entry)}>Edit</button>
+          <button className="btn-action" onClick={() => onEdit(entry)}>{t('action.edit')}</button>
           <button className="btn-action btn-action-delete" onClick={() => onDelete(entry.id)}>
-            Delete
+            {t('action.delete')}
           </button>
         </div>
       </div>
@@ -19,7 +22,9 @@ function DiaryEntry({ entry, onEdit, onDelete }) {
       {entry.tags?.length > 0 && (
         <div className="diary-tags">
           {entry.tags.map((tag) => (
-            <span key={tag} className="tag-chip tag-chip-display">{tag}</span>
+            <span key={tag} className="tag-chip tag-chip-display">
+              {t(`tag.${tag}`)}
+            </span>
           ))}
         </div>
       )}

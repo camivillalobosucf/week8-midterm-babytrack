@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { useFeedings } from '../hooks/useFeedings'
 import { useDiapers }  from '../hooks/useDiapers'
 import { useSleeps }   from '../hooks/useSleeps'
+import { useLanguage } from '../context/LanguageContext'
 import FeedingForm     from '../components/feeding/FeedingForm'
 import DiaperForm      from '../components/diaper/DiaperForm'
 import SleepForm       from '../components/sleep/SleepForm'
@@ -11,25 +12,6 @@ import { getDiaperAnalytics }  from '../utils/diaperAnalytics'
 import { getSleepAnalytics }   from '../utils/sleepAnalytics'
 import { toDate, formatTime, formatDuration, formatTimeAgo } from '../utils/formatters'
 import './EntriesPage.css'
-
-const FILTERS = [
-  { key: 'today',     label: 'Today'     },
-  { key: 'yesterday', label: 'Yesterday' },
-  { key: '7days',     label: '7 Days'    },
-  { key: 'all',       label: 'All'       },
-]
-
-const ADD_TITLES = {
-  feeding: '🍼 Log Feeding',
-  diaper:  '🧷 Log Diaper Change',
-  sleep:   '😴 Log Sleep Session',
-}
-
-const EDIT_TITLES = {
-  feeding: '🍼 Edit Feeding',
-  diaper:  '🧷 Edit Diaper',
-  sleep:   '😴 Edit Sleep Session',
-}
 
 function getEventTime(entry, type) {
   const raw = type === 'sleep' ? entry.startTime : entry.timestamp
@@ -53,9 +35,6 @@ function filterByRange(items, filter) {
 function feedingEmoji(type) {
   return type === 'breast' ? '🤱' : type === 'solid' ? '🥣' : '🍼'
 }
-function feedingLabel(type) {
-  return type === 'breast' ? 'Breast' : type === 'solid' ? 'Solid' : 'Bottle'
-}
 function feedingDetail(e) {
   if (e.type === 'breast') {
     const parts = []
@@ -68,12 +47,10 @@ function feedingDetail(e) {
 function diaperEmoji(type) {
   return type === 'wet' ? '💧' : type === 'dirty' ? '💩' : '💧💩'
 }
-function diaperLabel(type) {
-  return type === 'wet' ? 'Wet' : type === 'dirty' ? 'Dirty' : 'Both'
-}
 
 // ── main component ─────────────────────────────────────────────────────────
 function EntriesPage() {
+  const { t } = useLanguage()
   const { entries: feedings, loading: l1, add: addFeeding, update: updateFeeding, remove: removeFeeding } = useFeedings()
   const { entries: diapers,  loading: l2, add: addDiaper,  update: updateDiaper,  remove: removeDiaper  } = useDiapers()
   const { entries: sleeps,   loading: l3, add: addSleep,   update: updateSleep,   remove: removeSleep   } = useSleeps()
@@ -81,6 +58,25 @@ function EntriesPage() {
   const [filter,       setFilter]       = useState('today')
   const [formType,     setFormType]     = useState(null)
   const [editingEntry, setEditingEntry] = useState(null)
+
+  const FILTERS = [
+    { key: 'today',     label: t('entries.today')     },
+    { key: 'yesterday', label: t('entries.yesterday') },
+    { key: '7days',     label: t('entries.7days')     },
+    { key: 'all',       label: t('entries.all')       },
+  ]
+
+  const ADD_TITLES = {
+    feeding: t('entries.logFeeding'),
+    diaper:  t('entries.logDiaper'),
+    sleep:   t('entries.logSleep'),
+  }
+
+  const EDIT_TITLES = {
+    feeding: t('entries.editFeeding'),
+    diaper:  t('entries.editDiaper'),
+    sleep:   t('entries.editSleep'),
+  }
 
   const loading = l1 || l2 || l3
 
@@ -128,8 +124,12 @@ function EntriesPage() {
   }
 
   async function handleDelete(entry) {
-    const labels = { feeding: 'feeding', diaper: 'diaper change', sleep: 'sleep session' }
-    if (!window.confirm(`Delete this ${labels[entry._type]}?`)) return
+    const labels = {
+      feeding: t('entries.deleteFeeding'),
+      diaper:  t('entries.deleteDiaper'),
+      sleep:   t('entries.deleteSleep'),
+    }
+    if (!window.confirm(labels[entry._type])) return
     if (entry._type === 'feeding') await removeFeeding(entry.id)
     if (entry._type === 'diaper')  await removeDiaper(entry.id)
     if (entry._type === 'sleep')   await removeSleep(entry.id)
@@ -139,8 +139,8 @@ function EntriesPage() {
     <div className="entries-page">
       <div className="tracker-page-header">
         <div>
-          <h1 className="page-title">📋 Entries</h1>
-          <p className="page-subtitle">Feedings, diapers &amp; sleep in one timeline</p>
+          <h1 className="page-title">{t('entries.pageTitle')}</h1>
+          <p className="page-subtitle">{t('entries.pageSubtitle')}</p>
         </div>
       </div>
 
@@ -149,13 +149,13 @@ function EntriesPage() {
         <div className="entries-stat">
           <span className="entries-stat-emoji">🍼</span>
           <span className="entries-stat-val">{feedStats.todayCount}</span>
-          <span className="entries-stat-label">feeds</span>
+          <span className="entries-stat-label">{t('entries.feeds')}</span>
         </div>
         <div className="entries-stat-divider" />
         <div className="entries-stat">
           <span className="entries-stat-emoji">🧷</span>
           <span className="entries-stat-val">{diaperStats.diapersToday}</span>
-          <span className="entries-stat-label">diapers</span>
+          <span className="entries-stat-label">{t('entries.diapers')}</span>
         </div>
         <div className="entries-stat-divider" />
         <div className="entries-stat">
@@ -163,20 +163,20 @@ function EntriesPage() {
           <span className="entries-stat-val">
             {sleepStats.totalSleepMin > 0 ? formatDuration(sleepStats.totalSleepMin) : '—'}
           </span>
-          <span className="entries-stat-label">sleep</span>
+          <span className="entries-stat-label">{t('entries.sleep')}</span>
         </div>
       </div>
 
       {/* Quick add row */}
       <div className="entries-add-row">
         <button className="entries-add-btn feeding-add" onClick={() => openAdd('feeding')}>
-          + 🍼 Feeding
+          {t('entries.addFeeding')}
         </button>
         <button className="entries-add-btn diaper-add" onClick={() => openAdd('diaper')}>
-          + 🧷 Diaper
+          {t('entries.addDiaper')}
         </button>
         <button className="entries-add-btn sleep-add" onClick={() => openAdd('sleep')}>
-          + 😴 Sleep
+          {t('entries.addSleep')}
         </button>
       </div>
 
@@ -194,9 +194,9 @@ function EntriesPage() {
       </div>
 
       {/* Timeline */}
-      {loading && <p className="loading-text">Loading…</p>}
+      {loading && <p className="loading-text">{t('dash.loading')}</p>}
       {!loading && filtered.length === 0 && (
-        <p className="empty-text">No entries for this period. Tap a button above to add one.</p>
+        <p className="empty-text">{t('entries.empty')}</p>
       )}
       {!loading && filtered.length > 0 && (
         <div className="timeline">
@@ -233,25 +233,32 @@ function EntriesPage() {
 
 // ── timeline item ──────────────────────────────────────────────────────────
 function TimelineItem({ entry, onEdit, onDelete }) {
+  const { t } = useLanguage()
   const type = entry._type
 
   let emoji, label, detail, bgColor, textColor
   if (type === 'feeding') {
     emoji     = feedingEmoji(entry.type)
-    label     = feedingLabel(entry.type)
+    label     = entry.type === 'breast' ? t('feeding.breast') : entry.type === 'solid' ? t('feeding.solid') : t('feeding.bottle')
     detail    = feedingDetail(entry)
     bgColor   = 'var(--color-feeding)'
     textColor = '#166534'
   } else if (type === 'diaper') {
     emoji     = diaperEmoji(entry.type)
-    label     = diaperLabel(entry.type)
+    label     = entry.type === 'wet' ? t('diaper.wet') : entry.type === 'dirty' ? t('diaper.dirty') : t('diaper.both')
     detail    = entry.notes ?? ''
     bgColor   = 'var(--color-diaper)'
     textColor = '#713f12'
   } else {
     emoji     = '😴'
-    label     = 'Sleep'
-    detail    = formatDuration(entry.duration) + (entry.quality ? ` · ${entry.quality}` : '')
+    label     = t('recent.sleep')
+    const qualityMap = {
+      good: t('sleep.good'),
+      fair: t('sleep.fair'),
+      poor: t('sleep.poor'),
+    }
+    const qualityStr = entry.quality ? qualityMap[entry.quality] ?? entry.quality : ''
+    detail    = formatDuration(entry.duration) + (qualityStr ? ` · ${qualityStr}` : '')
     bgColor   = 'var(--color-sleep)'
     textColor = '#1e3a5f'
   }

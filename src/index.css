@@ -365,3 +365,103 @@ body {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ===== Dark mode ===== */
+html.dark {
+  --bg-app:         #0d0d14;
+  --bg-white:       #1a1a26;
+  --border-soft:    #2d2d3f;
+  --text-primary:   #ede9f5;
+  --text-secondary: #9ca3af;
+  --text-muted:     #6b7280;
+}
+
+/* Buttons */
+html.dark .btn-toggle {
+  background: var(--bg-white);
+  border-color: var(--border-soft);
+  color: var(--text-primary);
+}
+html.dark .btn-toggle:hover {
+  background: var(--border-soft);
+}
+html.dark .btn-action:hover {
+  background: #252535;
+  color: var(--text-primary);
+}
+html.dark .btn-action-delete:hover {
+  background: #2d1515;
+  color: #f87171;
+}
+html.dark .btn-outline {
+  border-color: #7c3a5e;
+  color: #f0a5cc;
+}
+html.dark .btn-outline:hover:not(:disabled) {
+  background: #2d1f35;
+}
+
+/* Forms */
+html.dark .form-group input,
+html.dark .form-group select,
+html.dark .form-group textarea {
+  background: #14141e;
+  border-color: var(--border-soft);
+  color: var(--text-primary);
+}
+html.dark .form-group input::placeholder,
+html.dark .form-group textarea::placeholder {
+  color: var(--text-muted);
+}
+html.dark .form-group input:focus,
+html.dark .form-group select:focus,
+html.dark .form-group textarea:focus {
+  border-color: #be185d;
+  box-shadow: 0 0 0 3px rgba(190, 24, 93, 0.2);
+}
+
+/* Nav */
+html.dark .nav-item:hover {
+  background: #252535;
+}
+html.dark .nav-item-active {
+  background: #2d1f35;
+  color: #f0a5cc;
+}
+
+/* Entry cards */
+html.dark .entry-card {
+  background: var(--bg-white);
+}
+
+/* State feedback */
+html.dark .profile-saved {
+  background: #0a2618;
+  border-color: #1a5c38;
+  color: #6ee7a0;
+}
+html.dark .form-error {
+  background: #2d1515;
+  border-color: #5c2020;
+  color: #f87171;
+}
+
+/* Entries filter tabs */
+html.dark .entries-filter-tab {
+  background: var(--bg-white);
+  border-color: var(--border-soft);
+}
+html.dark .entries-filter-tab:hover {
+  background: var(--border-soft);
+}
+
+/* Analytics cards keep their brand colors — text needs contrast */
+html.dark .analytics-label {
+  color: rgba(0, 0, 0, 0.6);
+}
+html.dark .analytics-value {
+  color: #1a1a2e;
+}
+html.dark .analytics-sub {
+  color: rgba(0, 0, 0, 0.5);
+}

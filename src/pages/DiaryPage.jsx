@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { useDiary } from '../hooks/useDiary'
+import { useLanguage } from '../context/LanguageContext'
 import DiaryEntry from '../components/diary/DiaryEntry'
 import DiaryForm from '../components/diary/DiaryForm'
 import Modal from '../components/layout/Modal'
 
 function DiaryPage() {
+  const { t } = useLanguage()
   const { entries, loading, error, add, update, remove } = useDiary()
   const [modalOpen,    setModalOpen]    = useState(false)
   const [editingEntry, setEditingEntry] = useState(null)
@@ -29,23 +31,23 @@ function DiaryPage() {
   }
 
   async function handleDelete(id) {
-    if (window.confirm('Delete this diary entry?')) await remove(id)
+    if (window.confirm(t('diary.deleteConfirm'))) await remove(id)
   }
 
   return (
     <div className="tracker-page">
       <div className="tracker-page-header">
         <div>
-          <h1 className="page-title">📓 Diary</h1>
-          <p className="page-subtitle">Daily notes and observations about your baby</p>
+          <h1 className="page-title">{t('diary.pageTitle')}</h1>
+          <p className="page-subtitle">{t('diary.pageSubtitle')}</p>
         </div>
-        <button className="btn btn-primary" onClick={openAdd}>+ Add Entry</button>
+        <button className="btn btn-primary" onClick={openAdd}>{t('diary.addBtn')}</button>
       </div>
 
-      {loading  && <p className="loading-text">Loading…</p>}
+      {loading  && <p className="loading-text">{t('dash.loading')}</p>}
       {error    && <p className="error-text">{error}</p>}
       {!loading && entries.length === 0 && (
-        <p className="empty-text">No diary entries yet. Tap + Add Entry to get started.</p>
+        <p className="empty-text">{t('diary.empty')}</p>
       )}
 
       <div className="entry-list">
@@ -62,7 +64,7 @@ function DiaryPage() {
       <Modal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={editingEntry ? 'Edit Entry' : 'New Diary Entry'}
+        title={editingEntry ? t('diary.editModal') : t('diary.logModal')}
       >
         <DiaryForm
           onSubmit={handleSubmit}

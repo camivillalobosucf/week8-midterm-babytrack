@@ -83,6 +83,62 @@
   text-decoration: underline;
 }
 
+/* Language picker row */
+.auth-lang-row {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-bottom: 1.25rem;
+}
+
+.auth-lang-btn {
+  padding: 0.25rem 0.75rem;
+  border: 1.5px solid var(--border-soft);
+  border-radius: 20px;
+  background: transparent;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.15s;
+}
+
+.auth-lang-btn:hover {
+  border-color: #be185d;
+  color: #be185d;
+}
+
+.auth-lang-active {
+  background: var(--color-entry);
+  border-color: var(--color-entry);
+  color: #7c1150;
+}
+
+/* Dark mode */
+html.dark .auth-card {
+  background: var(--bg-white);
+}
+html.dark .auth-title {
+  color: var(--text-primary);
+}
+html.dark .auth-subtitle {
+  color: var(--text-secondary);
+}
+html.dark .form-group label {
+  color: var(--text-primary);
+}
+html.dark .form-group input {
+  background: #14141e;
+  border-color: var(--border-soft);
+  color: var(--text-primary);
+}
+html.dark .auth-error {
+  background: #2d1515;
+  border-color: #5c2020;
+  color: #f87171;
+}
+
 /* Auth page wrapper — centers card on the colored background */
 .auth-page {
   min-height: 100vh;

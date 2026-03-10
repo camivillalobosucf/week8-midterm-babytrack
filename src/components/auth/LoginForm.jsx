@@ -1,30 +1,28 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { useLanguage } from '../../context/LanguageContext'
 import './AuthForm.css'
-
-function getErrorMessage(code) {
-  switch (code) {
-    case 'auth/invalid-credential':
-    case 'auth/user-not-found':
-    case 'auth/wrong-password':
-      return 'Incorrect email or password.'
-    case 'auth/invalid-email':
-      return 'Please enter a valid email address.'
-    case 'auth/too-many-requests':
-      return 'Too many failed attempts. Please try again later.'
-    default:
-      return 'Failed to log in. Please try again.'
-  }
-}
 
 function LoginForm() {
   const { login } = useAuth()
+  const { t, language, setLanguage } = useLanguage()
   const navigate = useNavigate()
-  const [email, setEmail] = useState('')
+  const [email,    setEmail]    = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [error,    setError]    = useState('')
+  const [loading,  setLoading]  = useState(false)
+
+  function getErrorMessage(code) {
+    switch (code) {
+      case 'auth/invalid-credential':
+      case 'auth/user-not-found':
+      case 'auth/wrong-password': return t('auth.err.invalid-credential')
+      case 'auth/invalid-email':  return t('auth.err.invalid-email')
+      case 'auth/too-many-requests': return t('auth.err.too-many-requests')
+      default: return t('auth.err.default-login')
+    }
+  }
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -42,45 +40,48 @@ function LoginForm() {
 
   return (
     <div className="auth-card">
-      <h2 className="auth-title">Welcome back</h2>
-      <p className="auth-subtitle">Log in to your BabyTrack account</p>
+      <div className="auth-lang-row">
+        <button
+          type="button"
+          className={'auth-lang-btn' + (language === 'en' ? ' auth-lang-active' : '')}
+          onClick={() => setLanguage('en')}
+        >English</button>
+        <button
+          type="button"
+          className={'auth-lang-btn' + (language === 'es' ? ' auth-lang-active' : '')}
+          onClick={() => setLanguage('es')}
+        >Español</button>
+      </div>
+
+      <h2 className="auth-title">{t('auth.welcomeBack')}</h2>
+      <p className="auth-subtitle">{t('auth.loginSubtitle')}</p>
 
       {error && <div className="auth-error">{error}</div>}
 
       <form onSubmit={handleSubmit} className="auth-form">
         <div className="form-group">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email">{t('auth.email')}</label>
           <input
-            id="email"
-            type="email"
-            value={email}
+            id="email" type="email" value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
-            placeholder="you@example.com"
-            autoComplete="email"
+            required placeholder="you@example.com" autoComplete="email"
           />
         </div>
-
         <div className="form-group">
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">{t('auth.password')}</label>
           <input
-            id="password"
-            type="password"
-            value={password}
+            id="password" type="password" value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
-            placeholder="••••••••"
-            autoComplete="current-password"
+            required placeholder="••••••••" autoComplete="current-password"
           />
         </div>
-
         <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
-          {loading ? 'Logging in...' : 'Log in'}
+          {loading ? t('auth.loggingIn') : t('auth.loginBtn')}
         </button>
       </form>
 
       <p className="auth-link">
-        Don&apos;t have an account? <Link to="/register">Sign up</Link>
+        {t('auth.noAccount')} <Link to="/register">{t('auth.signUp')}</Link>
       </p>
     </div>
   )

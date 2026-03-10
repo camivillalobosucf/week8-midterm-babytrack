@@ -1,9 +1,16 @@
+import { useLanguage } from '../../context/LanguageContext'
 import { formatTime, formatDate, formatDuration } from '../../utils/formatters'
 import './Feeding.css'
 
-const TYPE_LABEL = { breast: '🤱 Breast', bottle: '🍼 Bottle', solid: '🥣 Solid' }
-
 function FeedingEntry({ entry, onEdit, onDelete }) {
+  const { t } = useLanguage()
+
+  const TYPE_LABEL = {
+    breast: `🤱 ${t('feeding.breast')}`,
+    bottle: `🍼 ${t('feeding.bottle')}`,
+    solid:  `🥣 ${t('feeding.solid')}`,
+  }
+
   const detail = () => {
     if (entry.type === 'breast') {
       const parts = []
@@ -31,9 +38,9 @@ function FeedingEntry({ entry, onEdit, onDelete }) {
           {formatTime(entry.timestamp)} &middot; {formatDate(entry.timestamp)}
         </span>
         <div className="entry-actions">
-          <button className="btn-action" onClick={() => onEdit(entry)}>Edit</button>
+          <button className="btn-action" onClick={() => onEdit(entry)}>{t('action.edit')}</button>
           <button className="btn-action btn-action-delete" onClick={() => onDelete(entry.id)}>
-            Delete
+            {t('action.delete')}
           </button>
         </div>
       </div>
