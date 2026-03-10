@@ -84,6 +84,14 @@
   .profile-grid {
     grid-template-columns: 1fr;
   }
+  .profile-grid > .form-group {
+    min-width: 0;
+  }
+  .profile-grid input[type="date"] {
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
 }
 
 .profile-lang-row {
@@ -119,4 +127,60 @@ html.dark .profile-lang-active {
 html.dark .profile-lang-btn:hover {
   color: #f0a5cc;
   border-color: #7c3a5e;
+}
+
+/* Dark mode contrast for header card */
+html.dark .profile-baby-age {
+  color: rgba(255, 255, 255, 0.7);
+}
+html.dark .profile-baby-placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* View mode (read-only) styles */
+.profile-form-card.view-mode input,
+.profile-form-card.view-mode select,
+.profile-form-card.view-mode textarea {
+  border-color: transparent;
+  background: transparent;
+  padding-left: 0;
+  cursor: default;
+  pointer-events: none;
+  color: var(--text-primary);
+  -webkit-text-fill-color: var(--text-primary);
+}
+
+html.dark .profile-form-card.view-mode input,
+html.dark .profile-form-card.view-mode select,
+html.dark .profile-form-card.view-mode textarea {
+  color: var(--text-primary);
+  -webkit-text-fill-color: var(--text-primary);
+}
+
+.profile-edit-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.875rem;
+  border: 1.5px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  background: transparent;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.15s;
+  margin-bottom: 1rem;
+  align-self: flex-end;
+}
+
+.profile-edit-btn:hover {
+  border-color: #be185d;
+  color: #be185d;
+}
+
+html.dark .profile-edit-btn:hover {
+  border-color: #7c3a5e;
+  color: #f0a5cc;
 }

@@ -19,7 +19,12 @@ function FeedingEntry({ entry, onEdit, onDelete }) {
       return parts.join(' · ')
     }
     if (entry.type === 'bottle' || entry.type === 'solid') {
-      return entry.amount ? `${entry.amount} ml` : ''
+      if (!entry.amount) return ''
+      const storedUnit = entry.amountUnit ?? 'ml'
+      const displayAmt = storedUnit === 'oz'
+        ? Math.round(entry.amount / 29.5735 * 10) / 10
+        : entry.amount
+      return `${displayAmt} ${storedUnit}`
     }
     return ''
   }

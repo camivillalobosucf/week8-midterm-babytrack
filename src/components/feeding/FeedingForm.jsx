@@ -6,14 +6,36 @@ import './Feeding.css'
 
 function FeedingForm({ onSubmit, onCancel, initialEntry }) {
   const { t } = useLanguage()
-  const [type,         setType]         = useState(initialEntry?.type      ?? 'breast')
-  const [amount,       setAmount]       = useState(initialEntry?.amount     ?? '')
-  const [duration,     setDuration]     = useState(initialEntry?.duration   ?? '')
-  const [side,         setSide]         = useState(initialEntry?.side       ?? 'left')
-  const [notes,        setNotes]        = useState(initialEntry?.notes      ?? '')
+  const [type,         setType]         = useState(initialEntry?.type        ?? 'breast')
+  const [unit,         setUnit]         = useState(initialEntry?.amountUnit  ?? 'ml')
+  const [duration,     setDuration]     = useState(initialEntry?.duration    ?? '')
+  const [side,         setSide]         = useState(initialEntry?.side        ?? 'left')
+  const [notes,        setNotes]        = useState(initialEntry?.notes       ?? '')
   const [timestampStr, setTimestampStr] = useState(timestampToInput(initialEntry?.timestamp))
   const [loading,      setLoading]      = useState(false)
   const [error,        setError]        = useState('')
+
+  // When editing, show amount in the stored unit (convert ml→oz if needed)
+  const initAmount = () => {
+    if (!initialEntry?.amount) return ''
+    if ((initialEntry.amountUnit ?? 'ml') === 'oz') {
+      return String(Math.round(initialEntry.amount / 29.5735 * 10) / 10)
+    }
+    return String(initialEntry.amount)
+  }
+  const [amount, setAmount] = useState(initAmount)
+
+  function handleUnitChange(newUnit) {
+    if (amount && newUnit !== unit) {
+      const n = Number(amount)
+      if (newUnit === 'oz') {
+        setAmount(String(Math.round(n / 29.5735 * 10) / 10))
+      } else {
+        setAmount(String(Math.round(n * 29.5735)))
+      }
+    }
+    setUnit(newUnit)
+  }
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -25,9 +47,15 @@ function FeedingForm({ onSubmit, onCancel, initialEntry }) {
         notes:     notes.trim(),
         timestamp: Timestamp.fromDate(new Date(timestampStr)),
       }
-      if (type === 'bottle' || type === 'solid') data.amount   = Number(amount)   || 0
-      if (type === 'breast')                     data.duration = Number(duration) || 0
-      if (type === 'breast')                     data.side     = side
+      if (type === 'bottle' || type === 'solid') {
+        const amountInMl = unit === 'oz'
+          ? Math.round(Number(amount) * 29.5735)
+          : Number(amount)
+        data.amount     = amountInMl || 0
+        data.amountUnit = unit
+      }
+      if (type === 'breast') data.duration = Number(duration) || 0
+      if (type === 'breast') data.side     = side
       await onSubmit(data)
     } catch {
       setError(t('form.saveFailed'))
@@ -107,11 +135,23 @@ function FeedingForm({ onSubmit, onCancel, initialEntry }) {
 
       {(type === 'bottle' || type === 'solid') && (
         <div className="form-group">
-          <label>{t('feeding.amountMl')}</label>
+          <label>{unit === 'oz' ? t('feeding.amountOz') : t('feeding.amountMl')}</label>
+          <div className="btn-group" style={{ marginBottom: '0.5rem' }}>
+            <button
+              type="button"
+              className={`btn-toggle${unit === 'ml' ? ' btn-toggle-active' : ''}`}
+              onClick={() => handleUnitChange('ml')}
+            >ml</button>
+            <button
+              type="button"
+              className={`btn-toggle${unit === 'oz' ? ' btn-toggle-active' : ''}`}
+              onClick={() => handleUnitChange('oz')}
+            >oz</button>
+          </div>
           <input
-            type="number" min="0" value={amount}
+            type="number" min="0" step={unit === 'oz' ? '0.1' : '1'} value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            placeholder="e.g. 120"
+            placeholder={unit === 'oz' ? 'e.g. 4' : 'e.g. 120'}
           />
         </div>
       )}

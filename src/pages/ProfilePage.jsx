@@ -29,24 +29,46 @@ function ProfilePage() {
   const [allergies,    setAllergies]    = useState('')
   const [notes,        setNotes]        = useState('')
 
-  const [saving,   setSaving]   = useState(false)
-  const [saved,    setSaved]    = useState(false)
-  const [error,    setError]    = useState('')
+  const [saving,    setSaving]    = useState(false)
+  const [saved,     setSaved]     = useState(false)
+  const [error,     setError]     = useState('')
+  const [isEditing, setIsEditing] = useState(false)
 
-  // Populate form once profile loads
+  // Populate form once profile loads; auto-enter edit mode if no profile yet
   useEffect(() => {
-    if (!loading && profile) {
-      setBabyName(profile.babyName     ?? '')
-      setDob(profile.dob               ?? '')
-      setGender(profile.gender         ?? '')
-      setBirthWeight(profile.birthWeight ?? '')
-      setBirthLength(profile.birthLength ?? '')
-      setBloodType(profile.bloodType   ?? '')
-      setPediatrician(profile.pediatrician ?? '')
-      setAllergies(profile.allergies   ?? '')
-      setNotes(profile.notes           ?? '')
+    if (!loading) {
+      if (profile) {
+        setBabyName(profile.babyName       ?? '')
+        setDob(profile.dob                 ?? '')
+        setGender(profile.gender           ?? '')
+        setBirthWeight(profile.birthWeight ?? '')
+        setBirthLength(profile.birthLength ?? '')
+        setBloodType(profile.bloodType     ?? '')
+        setPediatrician(profile.pediatrician ?? '')
+        setAllergies(profile.allergies     ?? '')
+        setNotes(profile.notes             ?? '')
+      } else {
+        setIsEditing(true)
+      }
     }
   }, [loading, profile])
+
+  function resetToProfile() {
+    setBabyName(profile?.babyName       ?? '')
+    setDob(profile?.dob                 ?? '')
+    setGender(profile?.gender           ?? '')
+    setBirthWeight(profile?.birthWeight ?? '')
+    setBirthLength(profile?.birthLength ?? '')
+    setBloodType(profile?.bloodType     ?? '')
+    setPediatrician(profile?.pediatrician ?? '')
+    setAllergies(profile?.allergies     ?? '')
+    setNotes(profile?.notes             ?? '')
+  }
+
+  function handleCancelEdit() {
+    resetToProfile()
+    setIsEditing(false)
+  }
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -66,6 +88,7 @@ function ProfilePage() {
         language,
       })
       setSaved(true)
+      setIsEditing(false)
       setTimeout(() => setSaved(false), 2500)
     } catch {
       setError(t('profile.saveFailed'))
@@ -91,9 +114,19 @@ function ProfilePage() {
       {loading ? (
         <p className="loading-text">{t('profile.loading')}</p>
       ) : (
-        <form onSubmit={handleSubmit} className="profile-form-card">
-          {error  && <div className="form-error">{error}</div>}
-          {saved  && <div className="profile-saved">{t('profile.saved')}</div>}
+        <form onSubmit={handleSubmit} className={`profile-form-card${isEditing ? '' : ' view-mode'}`}>
+          {error && <div className="form-error">{error}</div>}
+          {saved && <div className="profile-saved">{t('profile.saved')}</div>}
+
+          {!isEditing && (
+            <button
+              type="button"
+              className="profile-edit-btn"
+              onClick={() => setIsEditing(true)}
+            >
+              ✏️ {t('profile.editBtn')}
+            </button>
+          )}
 
           {/* Basic info */}
           <h3 className="profile-section-title">{t('profile.basicInfo')}</h3>
@@ -105,6 +138,7 @@ function ProfilePage() {
                 value={babyName}
                 onChange={(e) => setBabyName(e.target.value)}
                 placeholder={t('profile.babyNamePlaceholder')}
+                readOnly={!isEditing}
               />
             </div>
             <div className="form-group">
@@ -113,11 +147,12 @@ function ProfilePage() {
                 type="date"
                 value={dob}
                 onChange={(e) => setDob(e.target.value)}
+                readOnly={!isEditing}
               />
             </div>
             <div className="form-group">
               <label>{t('profile.gender')}</label>
-              <select value={gender} onChange={(e) => setGender(e.target.value)}>
+              <select value={gender} onChange={(e) => setGender(e.target.value)} disabled={!isEditing}>
                 <option value="">{t('gender.unknown')}</option>
                 <option value="girl">{t('gender.girl')}</option>
                 <option value="boy">{t('gender.boy')}</option>
@@ -126,7 +161,7 @@ function ProfilePage() {
             </div>
             <div className="form-group">
               <label>{t('profile.bloodType')}</label>
-              <select value={bloodType} onChange={(e) => setBloodType(e.target.value)}>
+              <select value={bloodType} onChange={(e) => setBloodType(e.target.value)} disabled={!isEditing}>
                 {BLOOD_TYPES.map((bt) => (
                   <option key={bt} value={bt}>{bt || t('gender.unknown')}</option>
                 ))}
@@ -146,6 +181,7 @@ function ProfilePage() {
                 value={birthWeight}
                 onChange={(e) => setBirthWeight(e.target.value)}
                 placeholder={t('profile.birthWeightPlaceholder')}
+                readOnly={!isEditing}
               />
             </div>
             <div className="form-group">
@@ -155,6 +191,7 @@ function ProfilePage() {
                 value={birthLength}
                 onChange={(e) => setBirthLength(e.target.value)}
                 placeholder={t('profile.birthLengthPlaceholder')}
+                readOnly={!isEditing}
               />
             </div>
           </div>
@@ -170,6 +207,7 @@ function ProfilePage() {
               value={pediatrician}
               onChange={(e) => setPediatrician(e.target.value)}
               placeholder={t('profile.pediatricianPlaceholder')}
+              readOnly={!isEditing}
             />
           </div>
           <div className="form-group" style={{ marginTop: '1rem' }}>
@@ -179,6 +217,7 @@ function ProfilePage() {
               onChange={(e) => setAllergies(e.target.value)}
               placeholder={t('profile.allergiesPlaceholder')}
               rows={2}
+              readOnly={!isEditing}
             />
           </div>
           <div className="form-group" style={{ marginTop: '1rem' }}>
@@ -188,6 +227,7 @@ function ProfilePage() {
               onChange={(e) => setNotes(e.target.value)}
               placeholder={t('profile.notesPlaceholder')}
               rows={3}
+              readOnly={!isEditing}
             />
           </div>
 
@@ -208,11 +248,16 @@ function ProfilePage() {
             >Español</button>
           </div>
 
-          <div className="form-actions" style={{ marginTop: '1.5rem' }}>
-            <button type="submit" className="btn btn-primary btn-full" disabled={saving}>
-              {saving ? t('profile.saving') : t('profile.saveBtn')}
-            </button>
-          </div>
+          {isEditing && (
+            <div className="form-actions" style={{ marginTop: '1.5rem' }}>
+              <button type="button" className="btn btn-outline" onClick={handleCancelEdit}>
+                {t('form.cancel')}
+              </button>
+              <button type="submit" className="btn btn-primary" disabled={saving}>
+                {saving ? t('profile.saving') : t('profile.saveBtn')}
+              </button>
+            </div>
+          )}
 
           <div className="profile-logout">
             <button type="button" onClick={handleLogout} className="btn btn-outline btn-full">

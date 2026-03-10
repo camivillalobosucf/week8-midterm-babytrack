@@ -308,3 +308,6 @@ html.dark .mobile-bottom-nav {
   background: #12121c;
   border-top-color: var(--border-soft);
 }
+html.dark .sidebar-baby-chip {
+  color: #f0a5cc;
+}

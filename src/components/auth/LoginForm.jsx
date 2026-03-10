@@ -2,11 +2,13 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useLanguage } from '../../context/LanguageContext'
+import { useTheme } from '../../hooks/useTheme'
 import './AuthForm.css'
 
 function LoginForm() {
   const { login } = useAuth()
   const { t, language, setLanguage } = useLanguage()
+  const { isDark, toggle } = useTheme()
   const navigate = useNavigate()
   const [email,    setEmail]    = useState('')
   const [password, setPassword] = useState('')
@@ -40,7 +42,17 @@ function LoginForm() {
 
   return (
     <div className="auth-card">
+      <img src="/imgs/logo-stacked.svg" alt="BabyTrack" className="auth-logo" />
+
       <div className="auth-lang-row">
+        <button
+          type="button"
+          className="auth-theme-btn"
+          onClick={toggle}
+          aria-label="Toggle dark mode"
+        >
+          {isDark ? '☀️' : '🌙'}
+        </button>
         <button
           type="button"
           className={'auth-lang-btn' + (language === 'en' ? ' auth-lang-active' : '')}

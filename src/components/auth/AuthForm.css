@@ -83,12 +83,41 @@
   text-decoration: underline;
 }
 
+/* Logo */
+.auth-logo {
+  display: block;
+  margin: 0 auto 1.5rem;
+  height: 72px;
+  width: auto;
+}
+
 /* Language picker row */
 .auth-lang-row {
   display: flex;
+  align-items: center;
   gap: 0.5rem;
-  justify-content: flex-end;
   margin-bottom: 1.25rem;
+}
+
+/* Theme toggle inside auth card */
+.auth-theme-btn {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-soft);
+  background: transparent;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: auto;
+  transition: background 0.15s;
+}
+
+.auth-theme-btn:hover {
+  background: var(--border-soft);
 }
 
 .auth-lang-btn {

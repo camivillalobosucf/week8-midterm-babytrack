@@ -90,6 +90,7 @@ export const translations = {
     'feeding.right':        'Right',
     'feeding.both':         'Both',
     'feeding.amountMl':     'Amount (ml)',
+    'feeding.amountOz':     'Amount (oz)',
     'feeding.addBtn':       'Add Feeding',
     'feeding.deleteConfirm': 'Delete this feeding entry?',
 
@@ -245,6 +246,7 @@ export const translations = {
     'profile.notes':           'Notes 📝',
     'profile.notesPlaceholder': 'Any other important notes...',
     'profile.language':        'Language 🌐',
+    'profile.editBtn':         'Edit Profile',
     'profile.saveBtn':         '💾 Save Profile',
     'profile.saving':          'Saving…',
     'profile.saved':           '✅ Profile saved!',
@@ -380,6 +382,7 @@ export const translations = {
     'feeding.right':        'Derecho',
     'feeding.both':         'Ambos',
     'feeding.amountMl':     'Cantidad (ml)',
+    'feeding.amountOz':     'Cantidad (oz)',
     'feeding.addBtn':       'Agregar alimentación',
     'feeding.deleteConfirm': '¿Eliminar este registro de alimentación?',
 
@@ -535,6 +538,7 @@ export const translations = {
     'profile.notes':           'Notas 📝',
     'profile.notesPlaceholder': 'Otras notas importantes...',
     'profile.language':        'Idioma 🌐',
+    'profile.editBtn':         'Editar perfil',
     'profile.saveBtn':         '💾 Guardar perfil',
     'profile.saving':          'Guardando…',
     'profile.saved':           '✅ ¡Perfil guardado!',

@@ -462,9 +462,13 @@ html.dark .form-error {
 html.dark .entries-filter-tab {
   background: var(--bg-white);
   border-color: var(--border-soft);
+  color: var(--text-secondary);
 }
 html.dark .entries-filter-tab:hover {
   background: var(--border-soft);
+}
+html.dark .entries-filter-tab-active {
+  color: #f0a5cc;
 }
 
 /* Analytics cards — light text on dark pastel backgrounds */
