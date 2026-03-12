@@ -7,6 +7,7 @@ import { useProfile }  from '../hooks/useProfile'
 import { useLanguage } from '../context/LanguageContext'
 import SummaryCard     from '../components/dashboard/SummaryCard'
 import RecentActivity  from '../components/dashboard/RecentActivity'
+import WeeklyCharts    from '../components/dashboard/WeeklyCharts'
 import FeedingForm     from '../components/feeding/FeedingForm'
 import DiaperForm      from '../components/diaper/DiaperForm'
 import SleepForm       from '../components/sleep/SleepForm'
@@ -154,6 +155,8 @@ function DashboardPage() {
               <SummaryCard key={card.to + card.label} {...card} />
             ))}
           </div>
+
+          <WeeklyCharts feedings={feedings} diapers={diapers} sleeps={sleeps} />
 
           <h2 className="dash-section-label">{t('dash.recentActivity')}</h2>
           <RecentActivity

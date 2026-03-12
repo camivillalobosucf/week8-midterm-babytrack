@@ -6,6 +6,7 @@ import db from '../firebase/firestore'
 import { useProfile } from '../hooks/useProfile'
 import { useLanguage } from '../context/LanguageContext'
 import { calculateAge } from '../utils/babyAge'
+import Modal from '../components/layout/Modal'
 import './ProfilePage.css'
 
 const BLOOD_TYPES = ['', 'A+', 'A−', 'B+', 'B−', 'AB+', 'AB−', 'O+', 'O−']
@@ -35,8 +36,10 @@ function ProfilePage() {
   const [saved,          setSaved]          = useState(false)
   const [error,          setError]          = useState('')
   const [isEditing,      setIsEditing]      = useState(false)
-  const [deleting,       setDeleting]       = useState(false)
-  const [deleteError,    setDeleteError]    = useState('')
+  const [deleting,         setDeleting]         = useState(false)
+  const [deleteError,      setDeleteError]      = useState('')
+  const [showDeleteModal,  setShowDeleteModal]  = useState(false)
+  const [deleteEmailInput, setDeleteEmailInput] = useState('')
 
   // Populate form once profile loads; auto-enter edit mode if no profile yet
   useEffect(() => {
@@ -103,13 +106,23 @@ function ProfilePage() {
 
   const age = calculateAge(dob, t)
 
-  async function handleDeleteAccount() {
-    if (!window.confirm(t('profile.deleteConfirm'))) return
+  function openDeleteModal() {
+    setDeleteEmailInput('')
+    setDeleteError('')
+    setShowDeleteModal(true)
+  }
+
+  function closeDeleteModal() {
+    setShowDeleteModal(false)
+    setDeleteEmailInput('')
+    setDeleteError('')
+  }
+
+  async function confirmDelete() {
     setDeleteError('')
     setDeleting(true)
     try {
-      // Delete Firestore profile doc first
-      await deleteDoc(doc(db, 'users', currentUser.uid, 'profile', 'data'))
+      await deleteDoc(doc(db, 'users', currentUser.uid))
     } catch {
       // Non-fatal — proceed with auth deletion even if Firestore cleanup fails
     }
@@ -298,14 +311,49 @@ function ProfilePage() {
             <button
               type="button"
               className="btn btn-danger btn-full"
-              onClick={handleDeleteAccount}
+              onClick={openDeleteModal}
               disabled={deleting}
             >
-              {deleting ? t('profile.deleting') : t('profile.deleteAccount')}
+              {t('profile.deleteAccount')}
             </button>
           </div>
         </form>
       )}
+
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={closeDeleteModal}
+        title={t('profile.deleteModalTitle')}
+      >
+        <div className="delete-modal-body">
+          <p className="delete-modal-warning">{t('profile.deleteModalWarning')}</p>
+          <div className="form-group" style={{ marginTop: '1.25rem' }}>
+            <label className="delete-modal-label">{t('profile.deleteEmailLabel')}</label>
+            <input
+              type="email"
+              value={deleteEmailInput}
+              onChange={(e) => setDeleteEmailInput(e.target.value)}
+              placeholder={currentUser?.email ?? ''}
+              autoComplete="off"
+              autoFocus
+            />
+          </div>
+          {deleteError && <div className="form-error" style={{ marginTop: '0.75rem' }}>{deleteError}</div>}
+          <div className="form-actions" style={{ marginTop: '1.25rem' }}>
+            <button type="button" className="btn btn-outline" onClick={closeDeleteModal} disabled={deleting}>
+              {t('form.cancel')}
+            </button>
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={confirmDelete}
+              disabled={deleting || deleteEmailInput !== currentUser?.email}
+            >
+              {deleting ? t('profile.deleting') : t('profile.deleteConfirmBtn')}
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }
