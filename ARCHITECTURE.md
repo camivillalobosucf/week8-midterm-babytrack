@@ -138,6 +138,13 @@ src/
 - **Desktop** (`>768px`): sidebar always visible on the left (260px wide).
 - 4 navigation destinations: Dashboard, Entries, Diary, Profile.
 
+### Diary Tag Filtering
+- `activeTag` state in `DiaryPage` drives filtering. `null` means "show all".
+- `usedTags` is derived via `useMemo` — unique tags collected from all entries, sorted alphabetically. Only tags that exist in at least one entry appear in the filter bar.
+- Filtering is client-side; the full entry array is already in memory via `onSnapshot`.
+- `DiaryEntry` receives `onTagFilter(tag)` and `activeTag` props. Tags render as `<button>` elements (not `<span>`) for accessibility. Clicking toggles the filter.
+- The filter bar is hidden when no tagged entries exist.
+
 ### Dashboard Charts
 - `WeeklyCharts` builds 7-day data arrays from the raw entries already loaded by the parent hooks — no extra Firestore reads.
 - Uses Recharts `BarChart` / `ResponsiveContainer`. Colors switch between light and dark variants via `isDark` from `useTheme`.

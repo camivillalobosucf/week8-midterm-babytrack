@@ -140,6 +140,8 @@ export const translations = {
     'diary.addEntryBtn':  'Add Entry',
     'diary.writeSomething': 'Please write something.',
     'diary.deleteConfirm': 'Delete this diary entry?',
+    'diary.filterAll':    'All',
+    'diary.noTagEntries': 'No entries with this tag.',
 
     // Dashboard
     'dash.title':        'Dashboard 🏠',
@@ -450,6 +452,8 @@ export const translations = {
     'diary.addEntryBtn':  'Agregar entrada',
     'diary.writeSomething': 'Por favor escribe algo.',
     'diary.deleteConfirm': '¿Eliminar esta entrada del diario?',
+    'diary.filterAll':    'Todas',
+    'diary.noTagEntries': 'Sin entradas con esta etiqueta.',
 
     // Dashboard
     'dash.title':        'Inicio 🏠',

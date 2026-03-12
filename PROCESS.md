@@ -128,6 +128,25 @@ html.dark .my-component { color: #ede9f5; }
 
 ---
 
+## Phase 9 — Diary Tag Filtering
+
+### Feature
+- Users can filter diary entries by tag directly from the Diary page.
+- A filter bar appears above the entry list (only when at least one tagged entry exists), showing an "All" button and one button per unique tag that actually appears in the user's entries.
+- Clicking a tag filters the list to entries containing that tag. Clicking the active tag again (or "All") clears the filter.
+- Tags on individual entry cards are also clickable — tapping a tag in any card instantly activates that filter.
+- The active tag is visually highlighted in both the filter bar and on entry cards.
+- Shows a translated "No entries with this tag" message if the filter returns no results.
+- Fully translated (EN/ES) and dark mode supported.
+
+### Implementation notes
+- `activeTag` state lives in `DiaryPage`. `usedTags` derived with `useMemo` — sorted unique tags from all entries, recomputed only when entries change.
+- Filtering is purely client-side; no extra Firestore reads.
+- `DiaryEntry` receives `onTagFilter` and `activeTag` props. Tags render as `<button>` elements instead of `<span>` so they are natively keyboard-accessible.
+- New CSS classes: `.diary-filter-bar`, `.diary-filter-chip`, `.diary-filter-chip-active`, `.tag-chip-display-active` — all with dark mode overrides.
+
+---
+
 ## Known Constraints / Not Implemented
 - No offline support (Firestore persistence not enabled).
 - No push notifications.

@@ -54,14 +54,58 @@
   font-weight: 700;
 }
 
-/* Tag chip — display mode (read-only, in entry card) */
+/* Tag chip — display mode (in entry card, clickable) */
 .tag-chip-display {
   padding: 0.2rem 0.55rem;
   background: #fce7f3;
   border-color: var(--color-entry);
   color: #9d174d;
-  cursor: default;
+  cursor: pointer;
   font-size: 0.75rem;
+}
+
+.tag-chip-display:hover {
+  background: #fbcfe8;
+  border-color: #be185d;
+}
+
+.tag-chip-display-active {
+  background: var(--color-entry);
+  border-color: #be185d;
+  color: #7c1150;
+  font-weight: 700;
+}
+
+/* ===== Tag filter bar ===== */
+.diary-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-white);
+  border-radius: var(--radius-md);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.diary-filter-chip {
+  font-size: 0.8rem;
+  cursor: pointer;
+  border-color: var(--border-soft);
+  background: var(--bg-app);
+  color: var(--text-secondary);
+}
+
+.diary-filter-chip:hover {
+  border-color: var(--color-entry);
+  color: #9d174d;
+}
+
+.diary-filter-chip-active {
+  background: var(--color-entry);
+  border-color: var(--color-entry);
+  color: #7c1150;
+  font-weight: 700;
 }
 
 /* Tag picker scroll container */
@@ -89,4 +133,26 @@ html.dark .tag-chip-active {
 html.dark .tag-chip-display {
   background: #3d1630;
   color: #f0a5cc;
+  border-color: #7c3a5e;
+}
+html.dark .tag-chip-display:hover {
+  background: #5a1e46;
+}
+html.dark .tag-chip-display-active {
+  background: #7c3a5e;
+  border-color: #be185d;
+  color: #fce7f3;
+}
+html.dark .diary-filter-chip {
+  background: var(--bg-white);
+  color: var(--text-secondary);
+}
+html.dark .diary-filter-chip:hover {
+  border-color: #7c3a5e;
+  color: #f0a5cc;
+}
+html.dark .diary-filter-chip-active {
+  background: #7c3a5e;
+  border-color: #7c3a5e;
+  color: #fce7f3;
 }

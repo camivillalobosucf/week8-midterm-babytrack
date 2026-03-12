@@ -2,7 +2,7 @@ import { useLanguage } from '../../context/LanguageContext'
 import { formatDateTime } from '../../utils/formatters'
 import './Diary.css'
 
-function DiaryEntry({ entry, onEdit, onDelete }) {
+function DiaryEntry({ entry, onEdit, onDelete, onTagFilter, activeTag }) {
   const { t } = useLanguage()
 
   return (
@@ -22,9 +22,15 @@ function DiaryEntry({ entry, onEdit, onDelete }) {
       {entry.tags?.length > 0 && (
         <div className="diary-tags">
           {entry.tags.map((tag) => (
-            <span key={tag} className="tag-chip tag-chip-display">
+            <button
+              key={tag}
+              type="button"
+              className={`tag-chip tag-chip-display${activeTag === tag ? ' tag-chip-display-active' : ''}`}
+              onClick={() => onTagFilter?.(tag)}
+              title={t(`tag.${tag}`)}
+            >
               {t(`tag.${tag}`)}
-            </span>
+            </button>
           ))}
         </div>
       )}
