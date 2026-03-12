@@ -34,7 +34,7 @@ This document captures how the project was built, phase by phase, and the key de
 - Quick-add opens a `Modal` with the corresponding Form inline; on submit, calls the hook's `add()`.
 - `RecentActivity` merges all 4 entry types, sorts by timestamp descending, shows latest 10.
 - `formatTimeAgo` returns relative time strings ("just now", "3h ago").
-- `calculateAge` computes a human-readable age from `profile.babyDOB`.
+- `calculateAge` computes a human-readable age from `profile.dob` — **must receive `t`** for translated output.
 
 ## Phase 6 — Polish
 
@@ -53,14 +53,12 @@ This document captures how the project was built, phase by phase, and the key de
 - Filter tabs: Today / Yesterday / 7 Days / All.
 - Stats strip at top (feed count, diaper count, total sleep today).
 - Old routes `/feeding`, `/diaper`, `/sleep` redirect to `/entries` via React Router `<Navigate>`.
-- Individual tracker pages still exist but are only reachable for analytics (currently unused in nav).
 
 ### Dark Mode
 - Approach: `html.dark` class + CSS custom property overrides.
 - Anti-FOUC: inline `<script>` in `index.html` runs synchronously before body renders; reads `localStorage.theme` and applies class immediately. Falls back to `prefers-color-scheme: dark`.
-- `useTheme` hook manages toggle state, syncs to localStorage, adds/removes class.
+- `useTheme` hook manages toggle state, syncs to localStorage, adds/removes class. Exposes `isDark` for JS-side color switching (used in charts).
 - Tracker colors in dark mode are dark muted versions of the pastels to prevent "glowing" colors on a dark background.
-- Text colors on colored backgrounds (badges, analytics cards, summary cards, toggle buttons) all have explicit dark mode overrides to ensure white/light text on dark-pastel backgrounds.
 
 ### i18n (EN / ES Latin America)
 - Custom implementation — no i18n library needed at this scale.
@@ -70,8 +68,38 @@ This document captures how the project was built, phase by phase, and the key de
 - On registration: `saveProfile(cred.user.uid, { language })` writes to Firestore immediately.
 - `LanguageSync` component (in `ProtectedLayout`): reads `profile.language` from Firestore and calls `setLanguage()` if it differs — enables cross-device sync.
 - Data stored in English in Firestore; display-time translation via `t()`.
-- `formatTimeAgo(ts, t?)` and `calculateAge(dob, t?)` accept optional `t` for translated relative times and age strings.
+- `formatTimeAgo(ts, t)` and `calculateAge(dob, t)` require `t` for translated relative times and age strings. Omitting `t` will always produce English output.
 - Dashboard date uses `toLocaleDateString('es-MX', ...)` when language is Spanish.
+
+### Translation Bug Fixes
+Several hardcoded English strings were discovered and fixed:
+- `calculateAge(dob)` → `calculateAge(dob, t)` in both `DashboardPage` and `ProfilePage`.
+- `FeedingEntry` side label was using `entry.side.charAt(0).toUpperCase()` (always English) → replaced with a `SIDE_LABEL` map using `t('feeding.left')` etc.
+- Dashboard diaper fallback string was hardcoded → replaced with `t('dash.avgPerDay')`.
+
+## Phase 7 — Extended Profile & Delete Account
+
+### Extended Baby Profile
+- Added fields beyond name/DOB: `gender`, `bloodType`, `birthWeight`, `birthLength`, `pediatrician`, `allergies`, `notes`.
+- Profile form has two modes: **view** (read-only, clean display) and **edit** (full form inputs). An Edit button in the top-right corner switches modes.
+- View mode uses CSS class `.view-mode` to remove borders/backgrounds from inputs so they read like plain text.
+
+### Delete Account
+- `AuthContext` gained `deleteAccount()` — calls Firebase `deleteUser(auth.currentUser)`.
+- `ProfilePage` has a Danger Zone section. Clicking "Delete Account" opens a confirmation modal.
+- Modal requires the user to type their exact email address before the confirm button enables — prevents accidental deletion.
+- On confirm: Firestore user doc deleted first (best-effort, non-fatal), then `deleteAccount()` called. Handles `auth/requires-recent-login` error with a user-facing message.
+- `.btn-danger` style added to `index.css`.
+
+## Phase 8 — Data Visualization
+
+### Weekly Charts (Recharts)
+- Added `recharts` dependency.
+- `WeeklyCharts` component renders 3 mini bar charts side by side: Feedings (count/day), Diapers (count/day), Sleep (hrs/day) over the last 7 days.
+- Data built from the existing entries arrays already in memory — no extra Firestore queries.
+- Bar colors switch between light and dark variants using `isDark` from `useTheme`.
+- Day labels localized via `toLocaleDateString` matching the active language.
+- Placed on the dashboard between the summary cards and the recent activity feed.
 
 ---
 
@@ -89,6 +117,7 @@ This document captures how the project was built, phase by phase, and the key de
 1. Add to `en` object in `translations.js`.
 2. Add the same key to `es` object with Spanish value.
 3. Use `t('your.key')` in any component via `const { t } = useLanguage()`.
+4. If the key is used in a utility function (`formatters.js`, `babyAge.js`), pass `t` as a parameter — do not import `useLanguage` inside utilities.
 
 ### Dark mode CSS rule
 Always write a `html.dark` override for any rule that uses hard-coded colors that rely on a light background:
@@ -102,6 +131,6 @@ html.dark .my-component { color: #ede9f5; }
 ## Known Constraints / Not Implemented
 - No offline support (Firestore persistence not enabled).
 - No push notifications.
-- No image upload (baby photo).
+- No image/photo upload (Firebase Storage not enabled on the no-cost plan for this region).
 - Analytics are client-side only (computed from the full entry array fetched via `onSnapshot`).
-- Bundle is ~700 KB minified — mainly Firebase SDK. Code-splitting not implemented.
+- Bundle is ~1.07 MB minified — Firebase SDK + Recharts. Code-splitting not implemented.
