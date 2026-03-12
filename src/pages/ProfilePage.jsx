@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { deleteDoc, doc } from 'firebase/firestore'
+import db from '../firebase/firestore'
 import { useProfile } from '../hooks/useProfile'
 import { useLanguage } from '../context/LanguageContext'
 import { calculateAge } from '../utils/babyAge'
@@ -9,7 +11,7 @@ import './ProfilePage.css'
 const BLOOD_TYPES = ['', 'A+', 'A−', 'B+', 'B−', 'AB+', 'AB−', 'O+', 'O−']
 
 function ProfilePage() {
-  const { logout } = useAuth()
+  const { logout, deleteAccount, currentUser } = useAuth()
   const navigate   = useNavigate()
   const { profile, loading, save } = useProfile()
   const { t, language, setLanguage } = useLanguage()
@@ -29,10 +31,12 @@ function ProfilePage() {
   const [allergies,    setAllergies]    = useState('')
   const [notes,        setNotes]        = useState('')
 
-  const [saving,    setSaving]    = useState(false)
-  const [saved,     setSaved]     = useState(false)
-  const [error,     setError]     = useState('')
-  const [isEditing, setIsEditing] = useState(false)
+  const [saving,         setSaving]         = useState(false)
+  const [saved,          setSaved]          = useState(false)
+  const [error,          setError]          = useState('')
+  const [isEditing,      setIsEditing]      = useState(false)
+  const [deleting,       setDeleting]       = useState(false)
+  const [deleteError,    setDeleteError]    = useState('')
 
   // Populate form once profile loads; auto-enter edit mode if no profile yet
   useEffect(() => {
@@ -97,7 +101,30 @@ function ProfilePage() {
     }
   }
 
-  const age = calculateAge(dob)
+  const age = calculateAge(dob, t)
+
+  async function handleDeleteAccount() {
+    if (!window.confirm(t('profile.deleteConfirm'))) return
+    setDeleteError('')
+    setDeleting(true)
+    try {
+      // Delete Firestore profile doc first
+      await deleteDoc(doc(db, 'users', currentUser.uid, 'profile', 'data'))
+    } catch {
+      // Non-fatal — proceed with auth deletion even if Firestore cleanup fails
+    }
+    try {
+      await deleteAccount()
+      navigate('/login')
+    } catch (err) {
+      setDeleting(false)
+      if (err.code === 'auth/requires-recent-login') {
+        setDeleteError(t('profile.deleteRecentLogin'))
+      } else {
+        setDeleteError(t('profile.deleteFailed'))
+      }
+    }
+  }
 
   return (
     <div className="profile-page">
@@ -106,7 +133,7 @@ function ProfilePage() {
         <div className="profile-avatar">👶</div>
         {babyName
           ? <h2 className="profile-baby-name">{babyName}</h2>
-          : <h2 className="profile-baby-name profile-baby-placeholder">Your baby&apos;s name</h2>
+          : <h2 className="profile-baby-name profile-baby-placeholder">{t('profile.nameFallback')}</h2>
         }
         {age && <p className="profile-baby-age">{age}</p>}
       </div>
@@ -262,6 +289,19 @@ function ProfilePage() {
           <div className="profile-logout">
             <button type="button" onClick={handleLogout} className="btn btn-outline btn-full">
               {t('profile.logout')}
+            </button>
+          </div>
+
+          <div className="profile-danger-zone">
+            <h3 className="profile-section-title profile-danger-title">{t('profile.dangerZone')}</h3>
+            {deleteError && <div className="form-error">{deleteError}</div>}
+            <button
+              type="button"
+              className="btn btn-danger btn-full"
+              onClick={handleDeleteAccount}
+              disabled={deleting}
+            >
+              {deleting ? t('profile.deleting') : t('profile.deleteAccount')}
             </button>
           </div>
         </form>

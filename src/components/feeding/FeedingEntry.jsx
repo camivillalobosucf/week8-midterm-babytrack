@@ -11,10 +11,16 @@ function FeedingEntry({ entry, onEdit, onDelete }) {
     solid:  `🥣 ${t('feeding.solid')}`,
   }
 
+  const SIDE_LABEL = {
+    left:  t('feeding.left'),
+    right: t('feeding.right'),
+    both:  t('feeding.both'),
+  }
+
   const detail = () => {
     if (entry.type === 'breast') {
       const parts = []
-      if (entry.side)     parts.push(entry.side.charAt(0).toUpperCase() + entry.side.slice(1))
+      if (entry.side)     parts.push(SIDE_LABEL[entry.side] ?? entry.side)
       if (entry.duration) parts.push(formatDuration(entry.duration))
       return parts.join(' · ')
     }

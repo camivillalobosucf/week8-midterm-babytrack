@@ -99,6 +99,23 @@ body {
   background: #fdf2f8;
 }
 
+.btn-danger {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+html.dark .btn-danger {
+  background: #b91c1c;
+}
+
+html.dark .btn-danger:hover:not(:disabled) {
+  background: #991b1b;
+}
+
 .btn-full {
   width: 100%;
   padding: 0.625rem 1rem;

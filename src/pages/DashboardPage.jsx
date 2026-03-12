@@ -80,7 +80,7 @@ function DashboardPage() {
       primary:  diaperStats.diapersToday,
       secondary: diaperStats.wetCount + diaperStats.dirtyCount > 0
         ? `${diaperStats.wetCount} ${t('diaper.wet').toLowerCase()} · ${diaperStats.dirtyCount} ${t('diaper.dirty').toLowerCase()}`
-        : `avg ${diaperStats.weeklyAvg}/day this week`,
+        : `${diaperStats.weeklyAvg} ${t('dash.avgPerDay')}`,
       lastTime: diapers[0] ? formatTimeAgo(diapers[0].timestamp, t) : null,
     },
     {

@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  deleteUser,
 } from 'firebase/auth'
 import auth from '../firebase/auth'
 
@@ -25,6 +26,10 @@ export function AuthProvider({ children }) {
     return signOut(auth)
   }
 
+  function deleteAccount() {
+    return deleteUser(auth.currentUser)
+  }
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user)
@@ -33,7 +38,7 @@ export function AuthProvider({ children }) {
     return unsubscribe
   }, [])
 
-  const value = { currentUser, register, login, logout }
+  const value = { currentUser, register, login, logout, deleteAccount }
 
   return (
     <AuthContext.Provider value={value}>
