@@ -24,6 +24,18 @@ function LanguageSync() {
   return null
 }
 
+// Applies gender-based color theme to <html> element
+function GenderTheme() {
+  const { profile } = useProfile()
+  useEffect(() => {
+    const root = document.documentElement
+    root.classList.remove('theme-boy', 'theme-neutral')
+    if (profile?.gender === 'boy')     root.classList.add('theme-boy')
+    if (profile?.gender === 'neutral') root.classList.add('theme-neutral')
+  }, [profile?.gender])
+  return null
+}
+
 function ProtectedLayout() {
   return (
     <ProtectedRoute>
@@ -31,6 +43,7 @@ function ProtectedLayout() {
         <Navbar />
         <main className="app-content">
           <LanguageSync />
+          <GenderTheme />
           <Outlet />
         </main>
       </div>

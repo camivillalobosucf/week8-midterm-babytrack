@@ -251,6 +251,9 @@ export const translations = {
     'profile.language':        'Language 🌐',
     'profile.nameFallback':    "Your baby's name",
     'profile.editBtn':         'Edit Profile',
+    'profile.chooseEmoji':     'Profile Emoji',
+    'profile.emojiLeft':       'Left side',
+    'profile.emojiRight':      'Right side',
     'profile.saveBtn':         '💾 Save Profile',
     'profile.saving':          'Saving…',
     'profile.saved':           '✅ Profile saved!',
@@ -275,10 +278,9 @@ export const translations = {
     'chart.hrs':       'hrs',
 
     // Gender
-    'gender.unknown':  'Prefer not to say',
     'gender.girl':     'Girl 🎀',
     'gender.boy':      'Boy 💙',
-    'gender.other':    'Other',
+    'gender.neutral':  'Prefer not to say 🧡',
 
     // Diary tags
     'tag.Feeding':              'Feeding',
@@ -563,6 +565,9 @@ export const translations = {
     'profile.language':        'Idioma 🌐',
     'profile.nameFallback':    'Nombre de tu bebé',
     'profile.editBtn':         'Editar perfil',
+    'profile.chooseEmoji':     'Emoji del perfil',
+    'profile.emojiLeft':       'Lado izquierdo',
+    'profile.emojiRight':      'Lado derecho',
     'profile.saveBtn':         '💾 Guardar perfil',
     'profile.saving':          'Guardando…',
     'profile.saved':           '✅ ¡Perfil guardado!',
@@ -587,10 +592,9 @@ export const translations = {
     'chart.hrs':       'hrs',
 
     // Gender
-    'gender.unknown':  'Prefiero no decir',
     'gender.girl':     'Niña 🎀',
     'gender.boy':      'Niño 💙',
-    'gender.other':    'Otro',
+    'gender.neutral':  'Prefiero no decir 🧡',
 
     // Diary tags
     'tag.Feeding':              'Alimentación',

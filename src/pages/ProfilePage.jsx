@@ -11,6 +11,12 @@ import './ProfilePage.css'
 
 const BLOOD_TYPES = ['', 'A+', 'A−', 'B+', 'B−', 'AB+', 'AB−', 'O+', 'O−']
 
+const EMOJI_PRESETS = [
+  '👶','🌟','💕','🎀','🦋','⭐','🌈','🍼','💫','🌸',
+  '🌻','🎂','🎈','🦄','🐣','💝','🌙','✨','🐥','🐰',
+  '🍓','🌺','💛','🎠','🦁','🐻','🌼','🏆','💙','🩷',
+]
+
 function ProfilePage() {
   const { logout, deleteAccount, currentUser } = useAuth()
   const navigate   = useNavigate()
@@ -31,6 +37,8 @@ function ProfilePage() {
   const [pediatrician, setPediatrician] = useState('')
   const [allergies,    setAllergies]    = useState('')
   const [notes,        setNotes]        = useState('')
+  const [emojiLeft,    setEmojiLeft]    = useState('')
+  const [emojiRight,   setEmojiRight]   = useState('')
 
   const [saving,         setSaving]         = useState(false)
   const [saved,          setSaved]          = useState(false)
@@ -54,6 +62,8 @@ function ProfilePage() {
         setPediatrician(profile.pediatrician ?? '')
         setAllergies(profile.allergies     ?? '')
         setNotes(profile.notes             ?? '')
+        setEmojiLeft(profile.emojiLeft     ?? '')
+        setEmojiRight(profile.emojiRight   ?? '')
       } else {
         setIsEditing(true)
       }
@@ -70,6 +80,8 @@ function ProfilePage() {
     setPediatrician(profile?.pediatrician ?? '')
     setAllergies(profile?.allergies     ?? '')
     setNotes(profile?.notes             ?? '')
+    setEmojiLeft(profile?.emojiLeft     ?? '')
+    setEmojiRight(profile?.emojiRight   ?? '')
   }
 
   function handleCancelEdit() {
@@ -92,6 +104,8 @@ function ProfilePage() {
         pediatrician: pediatrician.trim(),
         allergies:    allergies.trim(),
         notes:        notes.trim(),
+        emojiLeft,
+        emojiRight,
         language,
       })
       setSaved(true)
@@ -143,12 +157,17 @@ function ProfilePage() {
     <div className="profile-page">
       {/* Header card */}
       <div className="profile-header">
-        <div className="profile-avatar">👶</div>
-        {babyName
-          ? <h2 className="profile-baby-name">{babyName}</h2>
-          : <h2 className="profile-baby-name profile-baby-placeholder">{t('profile.nameFallback')}</h2>
-        }
-        {age && <p className="profile-baby-age">{age}</p>}
+        <div className="profile-header-row">
+          <span className="profile-header-emoji">{emojiLeft || '👶'}</span>
+          <div className="profile-header-center">
+            {babyName
+              ? <h2 className="profile-baby-name">{babyName}</h2>
+              : <h2 className="profile-baby-name profile-baby-placeholder">{t('profile.nameFallback')}</h2>
+            }
+            {age && <p className="profile-baby-age">{age}</p>}
+          </div>
+          <span className="profile-header-emoji">{emojiRight || '⭐'}</span>
+        </div>
       </div>
 
       {loading ? (
@@ -193,10 +212,9 @@ function ProfilePage() {
             <div className="form-group">
               <label>{t('profile.gender')}</label>
               <select value={gender} onChange={(e) => setGender(e.target.value)} disabled={!isEditing}>
-                <option value="">{t('gender.unknown')}</option>
                 <option value="girl">{t('gender.girl')}</option>
                 <option value="boy">{t('gender.boy')}</option>
-                <option value="other">{t('gender.other')}</option>
+                <option value="neutral">{t('gender.neutral')}</option>
               </select>
             </div>
             <div className="form-group">
@@ -208,6 +226,35 @@ function ProfilePage() {
               </select>
             </div>
           </div>
+
+          {/* Emoji personalization — edit mode only */}
+          {isEditing && (
+            <>
+              <h3 className="profile-section-title" style={{ marginTop: '1.5rem' }}>
+                {t('profile.chooseEmoji')}
+              </h3>
+              <div className="emoji-pick-row">
+                {[['left', emojiLeft, setEmojiLeft], ['right', emojiRight, setEmojiRight]].map(([side, val, setter]) => (
+                  <div key={side} className="emoji-pick-side">
+                    <span className="emoji-pick-label">
+                      {side === 'left' ? t('profile.emojiLeft') : t('profile.emojiRight')}
+                    </span>
+                    <div className="emoji-pick-current">{val || (side === 'left' ? '👶' : '⭐')}</div>
+                    <div className="emoji-pick-grid">
+                      {EMOJI_PRESETS.map((em) => (
+                        <button
+                          key={em}
+                          type="button"
+                          className={`emoji-pick-btn${val === em ? ' emoji-pick-btn-active' : ''}`}
+                          onClick={() => setter(em)}
+                        >{em}</button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
 
           {/* Birth measurements */}
           <h3 className="profile-section-title" style={{ marginTop: '1.5rem' }}>

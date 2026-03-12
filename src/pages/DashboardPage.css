@@ -9,7 +9,7 @@
 .dashboard-age {
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #be185d;
+  color: var(--accent);
   margin-top: 0.2rem;
 }
 

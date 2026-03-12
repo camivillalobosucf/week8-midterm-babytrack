@@ -128,7 +128,24 @@ html.dark .my-component { color: #ede9f5; }
 
 ---
 
-## Phase 9 — Diary Tag Filtering
+## Phase 9 — Profile UI Overhaul & Gender Themes
+
+### Profile Header Redesign
+- Replaced the stacked (avatar + name + age) layout with a compact horizontal row: `[emoji] [name · age] [emoji]`.
+- Reduced padding and font sizes for a less dominant header card.
+- Added emoji personalization: user picks two emojis (left and right of the baby's name) from a 30-preset grid in edit mode. Stored as `emojiLeft` / `emojiRight` on the Firestore profile doc. Defaults display to 👶 / ⭐ if not set.
+
+### Gender-Based Color Themes
+- The entire app accent color system changes based on the baby's gender setting on the profile:
+  - **Girl** (default, no class): pink/rose throughout
+  - **Boy** (`html.theme-boy`): blue throughout
+  - **Prefer not to say** (`html.theme-neutral`): orange throughout
+- `GenderTheme` component (alongside `LanguageSync` in `App.jsx`) reads `profile.gender` via `useProfile` and adds/removes theme classes on `document.documentElement`.
+- All hardcoded pink hex values across 7 CSS files were replaced with CSS custom properties (`--accent`, `--accent-dark`, `--accent-darker`, `--accent-soft`, etc.), making every component respond to theme changes with zero component-level code.
+- Dark mode overrides for each theme defined in `html.dark.theme-boy` and `html.dark.theme-neutral` selector blocks.
+- Gender options: Girl / Boy / Prefer not to say (stored as `'girl'` / `'boy'` / `'neutral'`). "Other" and "Unknown" options removed.
+
+## Phase 11 — Diary Tag Filtering
 
 ### Feature
 - Users can filter diary entries by tag directly from the Diary page.

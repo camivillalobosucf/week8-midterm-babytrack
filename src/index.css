@@ -5,6 +5,17 @@
   --color-diaper:  #FBF0A6;
   --color-sleep:   #B6DDFD;
 
+  /* Accent palette — default girl/pink (overridden by theme classes) */
+  --accent:               #be185d;
+  --accent-dark:          #9d174d;
+  --accent-darker:        #7c1150;
+  --accent-soft:          #fce7f3;
+  --accent-soft-hover:    #fbcfe8;
+  --accent-btn-text:      #8b1a5a;
+  --accent-btn-hover:     #eda8cc;
+  --accent-outline-hover: #fdf2f8;
+  --accent-glow:          rgba(242, 184, 217, 0.3);
+
   --sidebar-width: 260px;
   --mobile-header-height: 60px;
   --bottom-nav-height: 62px;
@@ -82,21 +93,21 @@ body {
 
 .btn-primary {
   background: var(--color-entry);
-  color: #8b1a5a;
+  color: var(--accent-btn-text);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #eda8cc;
+  background: var(--accent-btn-hover);
 }
 
 .btn-outline {
   background: transparent;
-  color: #be185d;
+  color: var(--accent);
   border: 1.5px solid var(--color-entry);
 }
 
 .btn-outline:hover:not(:disabled) {
-  background: #fdf2f8;
+  background: var(--accent-outline-hover);
 }
 
 .btn-danger {
@@ -333,7 +344,7 @@ html.dark .btn-danger:hover:not(:disabled) {
 .form-group textarea:focus {
   outline: none;
   border-color: var(--color-entry);
-  box-shadow: 0 0 0 3px rgba(242, 184, 217, 0.3);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
 .form-group textarea {
@@ -397,6 +408,16 @@ html.dark {
   --color-diaper:  #4a3c00;
   --color-sleep:   #0e2d4a;
   --color-entry:   #4a1535;
+
+  /* Dark mode accent variables — default girl/pink */
+  --accent-dm-text:      #f0a5cc;
+  --accent-dm-border:    #7c3a5e;
+  --accent-dm-bg:        #3d1f35;
+  --accent-dm-bg-deep:   #3d1630;
+  --accent-dm-hover:     #5a1e46;
+  --accent-dm-nav-bg:    #2d1f35;
+  --accent-dm-btn-hover: #6b2040;
+  --accent-dm-glow:      rgba(190, 24, 93, 0.2);
 }
 
 /* Buttons */
@@ -404,7 +425,7 @@ html.dark .btn-primary {
   color: #ffffff;
 }
 html.dark .btn-primary:hover:not(:disabled) {
-  background: #6b2040;
+  background: var(--accent-dm-btn-hover);
 }
 html.dark .btn-toggle {
   background: var(--bg-white);
@@ -423,11 +444,11 @@ html.dark .btn-action-delete:hover {
   color: #f87171;
 }
 html.dark .btn-outline {
-  border-color: #7c3a5e;
+  border-color: var(--accent-dm-border);
   color: #ffffff;
 }
 html.dark .btn-outline:hover:not(:disabled) {
-  background: #3d1f35;
+  background: var(--accent-dm-bg);
 }
 
 /* Forms */
@@ -446,7 +467,7 @@ html.dark .form-group input:focus,
 html.dark .form-group select:focus,
 html.dark .form-group textarea:focus {
   border-color: #be185d;
-  box-shadow: 0 0 0 3px rgba(190, 24, 93, 0.2);
+  box-shadow: 0 0 0 3px var(--accent-dm-glow);
 }
 
 /* Nav */
@@ -454,8 +475,8 @@ html.dark .nav-item:hover {
   background: #252535;
 }
 html.dark .nav-item-active {
-  background: #2d1f35;
-  color: #f0a5cc;
+  background: var(--accent-dm-nav-bg);
+  color: var(--accent-dm-text);
 }
 
 /* Entry cards */
@@ -485,7 +506,7 @@ html.dark .entries-filter-tab:hover {
   background: var(--border-soft);
 }
 html.dark .entries-filter-tab-active {
-  color: #f0a5cc;
+  color: var(--accent-dm-text);
 }
 
 /* Analytics cards — light text on dark pastel backgrounds */
@@ -534,4 +555,59 @@ html.dark .entries-stats {
 }
 html.dark .entries-stat-label {
   color: var(--text-secondary);
+}
+
+/* ===== Gender themes ===== */
+html.theme-boy {
+  --accent:               #1d4ed8;
+  --accent-dark:          #1e40af;
+  --accent-darker:        #1e3a8a;
+  --accent-soft:          #eff6ff;
+  --accent-soft-hover:    #dbeafe;
+  --accent-btn-text:      #1e3a8a;
+  --accent-btn-hover:     #93c5fd;
+  --accent-outline-hover: #eff6ff;
+  --accent-glow:          rgba(191, 219, 254, 0.35);
+  --color-entry:          #bfdbfe;
+  --bg-app:               #f0f6ff;
+  --border-soft:          #dce8f8;
+}
+
+html.dark.theme-boy {
+  --color-entry:         #1e3a5f;
+  --accent-dm-text:      #93c5fd;
+  --accent-dm-border:    #1e40af;
+  --accent-dm-bg:        #172554;
+  --accent-dm-bg-deep:   #172554;
+  --accent-dm-hover:     #1e3a8a;
+  --accent-dm-nav-bg:    #1e3a8a;
+  --accent-dm-btn-hover: #1e40af;
+  --accent-dm-glow:      rgba(29, 78, 216, 0.2);
+}
+
+html.theme-neutral {
+  --accent:               #ea580c;
+  --accent-dark:          #c2410c;
+  --accent-darker:        #9a3412;
+  --accent-soft:          #fff7ed;
+  --accent-soft-hover:    #fed7aa;
+  --accent-btn-text:      #9a3412;
+  --accent-btn-hover:     #fdba74;
+  --accent-outline-hover: #fff7ed;
+  --accent-glow:          rgba(253, 186, 116, 0.35);
+  --color-entry:          #fed7aa;
+  --bg-app:               #fffaf5;
+  --border-soft:          #f0e4d6;
+}
+
+html.dark.theme-neutral {
+  --color-entry:         #7c2d12;
+  --accent-dm-text:      #fb923c;
+  --accent-dm-border:    #7c2d12;
+  --accent-dm-bg:        #431407;
+  --accent-dm-bg-deep:   #431407;
+  --accent-dm-hover:     #7c2d12;
+  --accent-dm-nav-bg:    #431407;
+  --accent-dm-btn-hover: #c2410c;
+  --accent-dm-glow:      rgba(234, 88, 12, 0.2);
 }

@@ -50,29 +50,29 @@
 .tag-chip-active {
   background: var(--color-entry);
   border-color: var(--color-entry);
-  color: #7c1150;
+  color: var(--accent-darker);
   font-weight: 700;
 }
 
 /* Tag chip — display mode (in entry card, clickable) */
 .tag-chip-display {
   padding: 0.2rem 0.55rem;
-  background: #fce7f3;
+  background: var(--accent-soft);
   border-color: var(--color-entry);
-  color: #9d174d;
+  color: var(--accent-dark);
   cursor: pointer;
   font-size: 0.75rem;
 }
 
 .tag-chip-display:hover {
-  background: #fbcfe8;
-  border-color: #be185d;
+  background: var(--accent-soft-hover);
+  border-color: var(--accent);
 }
 
 .tag-chip-display-active {
   background: var(--color-entry);
-  border-color: #be185d;
-  color: #7c1150;
+  border-color: var(--accent);
+  color: var(--accent-darker);
   font-weight: 700;
 }
 
@@ -98,13 +98,13 @@
 
 .diary-filter-chip:hover {
   border-color: var(--color-entry);
-  color: #9d174d;
+  color: var(--accent-dark);
 }
 
 .diary-filter-chip-active {
   background: var(--color-entry);
   border-color: var(--color-entry);
-  color: #7c1150;
+  color: var(--accent-darker);
   font-weight: 700;
 }
 
@@ -125,22 +125,22 @@ html.dark .tag-chip {
   color: var(--text-primary);
 }
 html.dark .tag-chip:hover {
-  border-color: #7c3a5e;
+  border-color: var(--accent-dm-border);
 }
 html.dark .tag-chip-active {
-  color: #f0a5cc;
+  color: var(--accent-dm-text);
 }
 html.dark .tag-chip-display {
-  background: #3d1630;
-  color: #f0a5cc;
-  border-color: #7c3a5e;
+  background: var(--accent-dm-bg-deep);
+  color: var(--accent-dm-text);
+  border-color: var(--accent-dm-border);
 }
 html.dark .tag-chip-display:hover {
-  background: #5a1e46;
+  background: var(--accent-dm-hover);
 }
 html.dark .tag-chip-display-active {
-  background: #7c3a5e;
-  border-color: #be185d;
+  background: var(--accent-dm-border);
+  border-color: var(--accent);
   color: #fce7f3;
 }
 html.dark .diary-filter-chip {
@@ -148,11 +148,11 @@ html.dark .diary-filter-chip {
   color: var(--text-secondary);
 }
 html.dark .diary-filter-chip:hover {
-  border-color: #7c3a5e;
-  color: #f0a5cc;
+  border-color: var(--accent-dm-border);
+  color: var(--accent-dm-text);
 }
 html.dark .diary-filter-chip-active {
-  background: #7c3a5e;
-  border-color: #7c3a5e;
+  background: var(--accent-dm-border);
+  border-color: var(--accent-dm-border);
   color: #fce7f3;
 }

@@ -118,6 +118,20 @@ src/
 /sleep      → redirect to /entries
 ```
 
+### Gender Color Themes
+- Three themes driven by `profile.gender`: girl/default (pink), boy (blue), neutral (orange).
+- `GenderTheme` component in `App.jsx` (alongside `LanguageSync`) watches `profile.gender` and applies `theme-boy` or `theme-neutral` class to `document.documentElement`. Girl uses no extra class.
+- All accent colors are CSS custom properties defined in `:root` with pink defaults:
+  - `--accent`, `--accent-dark`, `--accent-darker` — main, darker, darkest accent
+  - `--accent-soft`, `--accent-soft-hover` — light fill backgrounds
+  - `--accent-btn-text`, `--accent-btn-hover`, `--accent-outline-hover` — button states
+  - `--accent-glow` — focus ring box-shadow (pre-built `rgba(...)` value)
+  - `--color-entry` — also overridden per theme (affects diary cards, profile header, nav chip, summary cards, etc.)
+  - Dark mode equivalents: `--accent-dm-text`, `--accent-dm-border`, `--accent-dm-bg`, `--accent-dm-bg-deep`, `--accent-dm-hover`, `--accent-dm-nav-bg`, `--accent-dm-btn-hover`, `--accent-dm-glow`
+- `html.theme-boy` and `html.theme-neutral` override all variables. `html.dark.theme-boy` and `html.dark.theme-neutral` handle dark mode variants. Order in CSS ensures correct specificity cascade.
+- No component-level conditional styling needed — every component automatically responds to the theme class.
+- Gender options stored as `'girl'` / `'boy'` / `'neutral'` in Firestore.
+
 ### Dark Mode
 - Toggled by adding/removing `class="dark"` on `<html>`.
 - Anti-FOUC: inline `<script>` in `index.html` runs before React mounts, reads `localStorage.theme` and applies the class immediately.
@@ -157,7 +171,8 @@ src/
 ```
 users/{userId}/
   profile           # { babyName, dob, gender, language, bloodType,
-                    #   birthWeight, birthLength, pediatrician, allergies, notes }
+                    #   birthWeight, birthLength, pediatrician, allergies, notes,
+                    #   emojiLeft, emojiRight }
   feedings/{id}     # { type, side, duration, amount, timestamp, notes }
   diapers/{id}      # { type, timestamp, notes }
   sleeps/{id}       # { startTime, endTime, duration, quality, notes }
