@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { updateProfile } from 'firebase/auth'
+import auth from '../firebase/auth'
 import { deleteDoc, doc } from 'firebase/firestore'
 import db from '../firebase/firestore'
 import { useProfile } from '../hooks/useProfile'
@@ -49,6 +51,13 @@ function ProfilePage() {
   const [showDeleteModal,  setShowDeleteModal]  = useState(false)
   const [deleteEmailInput, setDeleteEmailInput] = useState('')
 
+  // Account section state
+  const [displayName,      setDisplayName]      = useState(currentUser?.displayName ?? '')
+  const [accountEditing,   setAccountEditing]   = useState(false)
+  const [accountSaving,    setAccountSaving]    = useState(false)
+  const [accountSaved,     setAccountSaved]     = useState(false)
+  const [accountError,     setAccountError]     = useState('')
+
   // Populate form once profile loads; auto-enter edit mode if no profile yet
   useEffect(() => {
     if (!loading) {
@@ -89,6 +98,22 @@ function ProfilePage() {
     setIsEditing(false)
   }
 
+  async function handleAccountSave(e) {
+    e.preventDefault()
+    setAccountError('')
+    setAccountSaving(true)
+    try {
+      await updateProfile(auth.currentUser, { displayName: displayName.trim() || null })
+      setAccountSaved(true)
+      setAccountEditing(false)
+      setTimeout(() => setAccountSaved(false), 2500)
+    } catch {
+      setAccountError(t('profile.accountSaveFailed'))
+    } finally {
+      setAccountSaving(false)
+    }
+  }
+
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
@@ -119,6 +144,13 @@ function ProfilePage() {
   }
 
   const age = calculateAge(dob, t)
+
+  const memberSince = currentUser?.metadata?.creationTime
+    ? new Date(currentUser.metadata.creationTime).toLocaleDateString(
+        language === 'es' ? 'es-MX' : 'en-US',
+        { year: 'numeric', month: 'long' }
+      )
+    : null
 
   function openDeleteModal() {
     setDeleteEmailInput('')
@@ -169,6 +201,82 @@ function ProfilePage() {
           <span className="profile-header-emoji">{emojiRight || '⭐'}</span>
         </div>
       </div>
+
+      {/* Account card */}
+      <form onSubmit={handleAccountSave} className={`profile-account-card${accountEditing ? '' : ' view-mode'}`}>
+        <div className="profile-account-header">
+          <h3 className="profile-section-title" style={{ marginBottom: 0, borderBottom: 'none' }}>
+            {t('profile.accountInfo')}
+          </h3>
+          {!accountEditing && (
+            <button type="button" className="profile-edit-btn" onClick={() => setAccountEditing(true)}>
+              ✏️ {t('profile.editAccount')}
+            </button>
+          )}
+        </div>
+        {accountError && <div className="form-error">{accountError}</div>}
+        {accountSaved && <div className="profile-saved">{t('profile.accountSaved')}</div>}
+
+        <div className="profile-grid" style={{ marginTop: '1rem' }}>
+          <div className="form-group">
+            <label>{t('profile.displayName')}</label>
+            <input
+              type="text"
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+              placeholder={t('profile.displayNamePlaceholder')}
+              readOnly={!accountEditing}
+            />
+          </div>
+          <div className="form-group">
+            <label>{t('profile.email')}</label>
+            <input
+              type="email"
+              value={currentUser?.email ?? ''}
+              readOnly
+              title={t('profile.emailReadOnly')}
+            />
+          </div>
+          {memberSince && (
+            <div className="form-group">
+              <label>{t('profile.memberSince')}</label>
+              <input type="text" value={memberSince} readOnly />
+            </div>
+          )}
+        </div>
+
+        {/* Language selector */}
+        <h3 className="profile-section-title" style={{ marginTop: '1.5rem' }}>
+          {t('profile.language')}
+        </h3>
+        <div className="profile-lang-row">
+          <button
+            type="button"
+            className={'profile-lang-btn' + (language === 'en' ? ' profile-lang-active' : '')}
+            onClick={() => setLanguage('en')}
+          >English</button>
+          <button
+            type="button"
+            className={'profile-lang-btn' + (language === 'es' ? ' profile-lang-active' : '')}
+            onClick={() => setLanguage('es')}
+          >Español</button>
+        </div>
+
+        {accountEditing && (
+          <div className="form-actions" style={{ marginTop: '1rem' }}>
+            <button
+              type="button"
+              className="btn btn-outline"
+              onClick={() => { setDisplayName(currentUser?.displayName ?? ''); setAccountEditing(false); setAccountError('') }}
+            >
+              {t('form.cancel')}
+            </button>
+            <button type="submit" className="btn btn-primary" disabled={accountSaving}>
+              {accountSaving ? t('profile.saving') : t('profile.saveBtn')}
+            </button>
+          </div>
+        )}
+      </form>
 
       {loading ? (
         <p className="loading-text">{t('profile.loading')}</p>
@@ -316,23 +424,6 @@ function ProfilePage() {
               rows={3}
               readOnly={!isEditing}
             />
-          </div>
-
-          {/* Language selector */}
-          <h3 className="profile-section-title" style={{ marginTop: '1.5rem' }}>
-            {t('profile.language')}
-          </h3>
-          <div className="profile-lang-row">
-            <button
-              type="button"
-              className={'profile-lang-btn' + (language === 'en' ? ' profile-lang-active' : '')}
-              onClick={() => setLanguage('en')}
-            >English</button>
-            <button
-              type="button"
-              className={'profile-lang-btn' + (language === 'es' ? ' profile-lang-active' : '')}
-              onClick={() => setLanguage('es')}
-            >Español</button>
           </div>
 
           {isEditing && (

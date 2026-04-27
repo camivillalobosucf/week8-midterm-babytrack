@@ -157,6 +157,47 @@ html.dark .emoji-pick-btn-active {
   border-color: var(--accent);
 }
 
+/* ===== Account card ===== */
+.profile-account-card {
+  background: var(--bg-white);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.25rem;
+}
+
+.profile-account-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.625rem;
+  border-bottom: 1.5px solid var(--border-soft);
+  margin-bottom: 0;
+}
+
+.profile-account-card.view-mode input {
+  border-color: transparent;
+  background: transparent;
+  padding-left: 0;
+  cursor: default;
+  pointer-events: none;
+  color: var(--text-primary);
+  -webkit-text-fill-color: var(--text-primary);
+}
+
+html.dark .profile-account-card.view-mode input {
+  color: var(--text-primary);
+  -webkit-text-fill-color: var(--text-primary);
+}
+
+/* Email always read-only — style consistently in both modes */
+.profile-account-card input[type="email"][readonly],
+.profile-account-card input[type="text"][readonly] {
+  cursor: default;
+}
+
 /* ===== Form card ===== */
 .profile-form-card {
   background: var(--bg-white);

@@ -78,18 +78,27 @@ function Navbar() {
             alt="BabyTrack"
             className="sidebar-logo"
           />
-          <button
-            className="sidebar-close"
-            onClick={() => setOpen(false)}
-            aria-label="Close navigation"
-          >
-            &#x2715;
-          </button>
+          <div className="sidebar-top-actions">
+            <button
+              className="sidebar-theme-btn"
+              onClick={toggle}
+              aria-label="Toggle dark mode"
+            >
+              {isDark ? '☀️' : '🌙'}
+            </button>
+            <button
+              className="sidebar-close"
+              onClick={() => setOpen(false)}
+              aria-label="Close navigation"
+            >
+              &#x2715;
+            </button>
+          </div>
         </div>
 
         {profile?.babyName && (
           <div className="sidebar-baby-chip">
-            👶 {profile.babyName}
+            {profile.emojiLeft || '👶'} {profile.babyName} {profile.emojiRight || '⭐'}
           </div>
         )}
 
@@ -110,15 +119,14 @@ function Navbar() {
         </nav>
 
         <div className="sidebar-footer">
-          <button className="theme-toggle-btn" onClick={toggle}>
-            {isDark ? t('theme.light') : t('theme.dark')}
-          </button>
-          <p className="sidebar-email" title={currentUser?.email}>
-            {currentUser?.email}
-          </p>
-          <button onClick={handleLogout} className="btn btn-outline btn-full">
-            {t('profile.logout')}
-          </button>
+          <div className="sidebar-user-row">
+            <div className="sidebar-avatar">
+              {currentUser?.email?.[0]?.toUpperCase()}
+            </div>
+            <button onClick={handleLogout} className="btn btn-outline sidebar-logout-btn">
+              {t('profile.logout')}
+            </button>
+          </div>
         </div>
       </aside>
     </>
